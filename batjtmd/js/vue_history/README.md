@@ -15,3 +15,7 @@
     const 对象 ： 存储地址 ， 地址指向堆中的对象 ， 地址赋值
     所以 const 定义的对象，不能重新赋值，但是可以修改对象的属性
     - ![image-20250526165455463](C:\Users\HP\AppData\Roaming\Typora\typora-user-images\image-20250526165455463.png)
+    - 块级作用域
+    let 
+    解决大型项目的for。。。
+    - var前端会挂在windows 上

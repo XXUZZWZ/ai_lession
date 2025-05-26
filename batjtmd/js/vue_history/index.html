@@ -1,32 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
   <script>
-    const friends  =['a','b','c']
+    const friends = ['a', 'b', 'c']
     friends.push('d')
-    friends.forEach(function(friend){
+    friends.forEach(function (friend) {
       console.log(friend)
     })
     const friends2 = [
-      {name: 'a',age: 20},
-      {name:'b',age:20},
-      {name:'c',age:20}
+      { name: 'a', age: 20 },
+      { name: 'b', age: 20 },
+      { name: 'c', age: 20 }
     ]
     console.log("没加d");
-    
+
     console.log(friends2)
-    
+
     const newfriends = friends2;
     newfriends.push({
-      name:'d',age:20
+      name: 'd', age: 20
     })
     console.log("加了d");
+    friends2.unshift(
+      {
+        name: '严婷婷',
+        age: 21
+      }
+    )
     console.log(friends2)
+
   </script>
 </body>
+
 </html>

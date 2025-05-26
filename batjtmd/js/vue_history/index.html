@@ -17,9 +17,16 @@
       {name:'b',age:20},
       {name:'c',age:20}
     ]
-    friends2.forEach(function(friend){
-      console.log(friend)
+    console.log("没加d");
+    
+    console.log(friends2)
+    
+    const newfriends = friends2;
+    newfriends.push({
+      name:'d',age:20
     })
+    console.log("加了d");
+    console.log(friends2)
   </script>
 </body>
 </html>

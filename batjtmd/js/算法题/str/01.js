@@ -38,15 +38,14 @@ const reverseString1 = function (str) {
 // es6 返回值的时候，连return都能省略
 const reverseString2 = (str) => str.split("").reverse().join("");
 // 只有一个值可以这样写
-const reverseString3 = (str) => str.split("").reverse().join("");
+const reverseString3 = str => str.split("").reverse().join("");
 
 reverseString(str);
 reverseString1(str);
 reverseString2(str);
-reverseString3(str);
 
 let str1 = "hello";
-var str2 = "hello";
+var str2 = reverseString3(str);
 const strobj = new String("hello");
 // 模板字符串 ${任何变量}
 const str3 = `hello ${str2}`;

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>flex布局</title>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .father {
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+    flex-wrap:wrap;
+    width: 500px;
+    height: 700px;
+    background-color: skyblue;
+    margin: 0 auto;
+  }
+
+  .son {
+    width: 80px;
+    height: 100px;
+    background-color: rebeccapurple;
+    margin: 10px 10px;
+  }
+
+  .daugher {
+    float: left;
+    width: 90px;
+    height: 110px;
+    justify-self: flex-end;
+    background-color: rgb(241, 62, 7);
+    margin: 10px 10px;
+  }
+</style>
+
+<body>
+  <div class="father">
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="daugher"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+    <div class="son"></div>
+
+
+  </div>
+</body>
+
+</html>

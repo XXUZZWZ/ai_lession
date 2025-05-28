@@ -21,5 +21,39 @@
  }
  .weui-page__desc{
   font-size: 12px;
-  color:#8a8080;
+  color:#827856;
+ }
+ .weui-btn-sp-area{
+   
+ 
+ }
+ .weui-btn{
+  display:block;
+  border-width: 0px;
+  width: 153px;
+  height: 42px;
+  font-size: 15px;
+  background-color: #00b853;
+  color: #fbfbfb;
+  margin: 0 auto;
+  margin-bottom: 12px;
+  border-radius: 4px;
+ }
+ .weui-btn_default{
+  background-color: #dddddd;
+  color: #333;
+ }
+ .weui-btn_loading {
+  background: url(./loding.png) no-repeat center center;
+  background-color: #00b853;
+ }
+ .weui-btn_primary{
+  background: url(./loding.png) no-repeat left center;
+ }
+.weui-btn_default.weui-btn_loading{
+  background: url(./wloding.png) no-repeat 30px  center;
+  background-color: #dddddd;
+ }
+ .weui-btn_unclick{
+  color: #cac5c7;
  }

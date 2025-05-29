@@ -1,0 +1,31 @@
+/* 基础按钮样式 */
+.weui-btn {
+  display: block;
+  width: 153px;
+  height: 42px;
+  border-radius: 4px;
+  font-size: 15px;
+  margin: 0 auto 12px;
+  transition: background-color 0.3s;
+}
+
+/* 主按钮修饰符 */
+.weui-btn_primary {
+  background-color: #00b853;
+  color: #fbfbfb;
+}
+
+/* 加载状态修饰符 */
+.weui-btn_loading {
+  position: relative;
+  background-image: url(./loading.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* 禁用状态修饰符 */
+.weui-btn_disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

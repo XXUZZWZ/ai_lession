@@ -38,4 +38,4 @@
 ## 闭包
 
 基础是理解词法作用域等
-根据词法作用域的规则，内部函数 getName h， setName 外部 foo 中的变量
+根据词法作用域的规则，内部函数 getName 和 setName 外部 foo 中的变量

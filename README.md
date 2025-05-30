@@ -4,6 +4,7 @@
 
 ## 📁 目录结构
 
+```
 AIFullStack/
 ├── aigc/                # aigc相关实践
 ├── batjtmd/             # javaScript基础 和 面试题
@@ -16,6 +17,7 @@ AIFullStack/
 ├── .gitignore           # .gitignore
 └── README.md            #  README.md
 
+```
 
 
 ## 📘 学习内容

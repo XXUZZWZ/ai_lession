@@ -41,6 +41,7 @@
   - 注意事项
     -BigInt 与 Number 不能混合运算，要显式转换
     -BigInt 只接受整数或字符串参数，不能传递浮点数
+    -BIgInt 不能作为 Math 对象方法的参数
 
 - number 的一些常用方法
 

@@ -1,0 +1,48 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body{
+  display: flex;/*弹性布局 特别适合移动端*/
+  align-items: center;
+  justify-self: center;
+  height: 100vh; /* vh 相对单位 view height 一屏高度100vh ,等比例划分 100% */
+  overflow: hidden;/*超出隐藏 */
+
+}
+.container{
+  display: flex;
+  width: 90vw;/*viewport width */
+  height: 90vh;
+  justify-content: center;
+  align-items: center;
+}
+.qq-panel{
+  height: 80vh;
+  width: 10vh;
+  border-radius: 41px;
+  cursor: pointer;
+  margin:1.5vh;
+  position: relative;
+  overflow: hidden;
+  transition: all 700ms ease-in;
+ /* // flex: 0.5; */
+
+}
+.qq-panel__title{
+  position: relative;
+  top: 71vh;
+  left: 10px;
+  color: #efecec;
+  opacity: 0;
+}
+
+.qq-panel.qq-panel_active{
+  flex: 4.5;
+  transition: 0.2ms;
+}
+.qq-panel_active .qq-panel__title{
+  opacity: 1;
+  transition:opacity 1.3 ease-in 0.4;
+}

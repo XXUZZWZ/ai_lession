@@ -1,0 +1,1 @@
+console.log(Symbol("age") === Symbol("age"));

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原生js</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <!-- 挂载点 -->
+   <table id="friends" class="table table-striped">
+    <thead>
+      <tr>
+        <th>姓名</th>
+        <th>家乡</th>
+      </tr>
+    </thead>
+    <!-- <tbody>//挂载点就是tbody的可变部分 -->
+      <tbody>
+      <tr>
+        <td>李宏伟</td>
+        <td>抚州</td>
+      </tr>
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+   </table>
+  </div>
+  <script>
+    // json 数组 
+    // dom 编程 动态页面 数据
+    // 挂载点，由html动态生成
+    const oBody = document.querySelector('#friends tbody'); // 能不能找到挂载点后的事情交给框架去做
+    const friends = [
+            {
+             name: "李宏伟",
+              hometown:"京海莽村"
+            },
+            {
+              name:"高启强",
+              hometown:"京海旧厂街"
+            },
+            {
+              name:"安欣",
+              hometown:"京海旧厂街"
+            }
+          ]
+    oBody.innerHTML = friends.map(item=>
+       `
+      <tr>
+      <td>${item.name}  </td>
+      <td>${item.hometown}</td>
+      </tr>
+      `
+    ).join('');
+    // map返回的是一个数组，如果不用join,这里用加法会蕴含默认的数组对象转化成字符串 ""+[1,2,3] = '1,2,3',默认用逗号分隔,自动调用toString方法。
+    // 所以这里用join('') 把数组转化成字符串。
+    
+
+  </script>
+</body>
+</html>

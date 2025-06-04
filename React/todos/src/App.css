@@ -1,0 +1,19 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.fz-table{
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  border: 1px solid #85d3ae;
+  background-color: #85d3ae;
+}
+.fz-title{
+  background-color: #85d3ae;
+  color: #fff;
+  text-align: center;
+}

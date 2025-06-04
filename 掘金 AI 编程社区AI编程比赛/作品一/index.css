@@ -1,0 +1,162 @@
+/* 引入Google字体 - 更符合美食主题的手写风格字体 */
+
+body {
+  font-family: 'Quicksand', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, #fff9f2 0%, #ffedd8 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  text-align: center;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255, 152, 0, 0.15);
+  max-width: 800px;
+  width: 90%;
+  border: 1px solid #ffe4c9;
+  position: relative;
+  overflow: hidden;
+}
+
+.container:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #ff9f43 0%, #ff6b6b 100%);
+}
+
+h1 {
+  font-family: 'Pacifico', cursive;
+  color: #e74c3c;
+  font-size: 2.8rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+button {
+  padding: 14px 35px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: linear-gradient(to right, #ff9f43, #e74c3c);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+  letter-spacing: 0.5px;
+}
+
+button:hover {
+  background: linear-gradient(to right, #ffaf60, #ff6b6b);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.result-box {
+  margin: 25px 0;
+  padding: 20px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #d35400;
+  min-height: 60px;
+  background: #fffaf0;
+  border-radius: 12px;
+  border-left: 5px solid #ff9f43;
+  box-shadow: inset 0 0 10px rgba(255, 159, 67, 0.1);
+  animation: fadeIn 0.6s ease;
+}
+
+.wishlist-box {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fffaf0;
+  border-radius: 15px;
+  text-align: left;
+  border: 2px dashed #ffd8b8;
+}
+
+.wishlist-item {
+  padding: 12px 15px;
+  margin: 10px 0;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+  transition: transform 0.3s;
+  border-left: 4px solid #ff9f43;
+}
+
+.wishlist-item:hover {
+  transform: translateX(5px);
+}
+
+.remove-btn {
+  padding: 6px 12px;
+  background: linear-gradient(to right, #ff9f43, #e74c3c);
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.remove-btn:hover {
+  background: linear-gradient(to right, #ff6b6b, #e74c3c);
+  transform: scale(1.05);
+}
+
+a {
+  display: inline-block;
+  padding: 12px 25px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e74c3c;
+  background-color: #fff0e0;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2);
+  margin: 15px 5px;
+  border: 1px solid #ffd8b8;
+}
+
+a:hover {
+  background: linear-gradient(to right, #ff9f43, #e74c3c);
+  color: white;
+  box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
+  transform: translateY(-3px);
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.8rem;
+  }
+  h1 {
+    font-size: 2.2rem;
+  }
+  button {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+}

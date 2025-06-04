@@ -123,6 +123,7 @@ foods.push(...advertisements);
 document.addEventListener('DOMContentLoaded', () => {
     const recommendBtn = document.getElementById('recommendBtn');
     const resultDiv = document.getElementById('result');
+    let currentSelected = null; // 新增当前选中状态变量
 
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
@@ -149,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 修改原点击事件
     recommendBtn.addEventListener('click', () => {
         const randomIndex = Math.floor(Math.random() * foods.length);
-        const selected = foods[randomIndex];
+        currentSelected = foods[randomIndex]; // 更新当前选中项
         
         recommendBtn.style.transform = 'scale(0.95)';
         setTimeout(() => {
@@ -158,18 +159,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultDiv.innerHTML = `
             <div class="food-card">
-                <h2>今日推荐：${selected.名称}</h2>
-                <p>类型：${selected.类型}</p>
+                <h2>今日推荐：${currentSelected.名称}</h2>
+                <p>类型：${currentSelected.类型}</p>
             </div>
         `;
+    });
 
-        document.querySelector('.add-btn').addEventListener('click', () => {
-            if (!wishlist.some(item => item.名称 === selected.名称)) {
-                wishlist.push(selected);
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                updateWishlistDisplay();
-            }
-        });
+    // 独立添加按钮事件监听
+    document.querySelector('.add-btn').addEventListener('click', () => {
+        if (currentSelected && !wishlist.some(item => item.名称 === currentSelected.名称)) {
+            wishlist.push(currentSelected);
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistDisplay();
+        }
     });
 
     // 初始化显示

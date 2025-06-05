@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>伪类选择器</title>
+</head>
+<style>
+  .wz-ex1:hover{
+    background-color: #3eccd3;
+  color: red;
+  }
+  .wz-ex2::selection{
+    background-color: #3eccd3;
+  color: red; 
+  }
+  .wz-ex3:focus{
+    width: 100px ;
+    background-color: #3eccd3;  
+    color: red;
+    border: 2px solid #4ecd94;
+  }
+  #wz-inp input:checked+label{
+    font-weight: bold;
+  }
+</style>
+<body>
+  <h1>伪类选择器 ：hover</h1>
+  <p class="wz-ex1">当鼠标悬浮在这里</p>
+  <h1>伪类选择器 ::slection</h1>
+  <p class="wz-ex2">当鼠标选中某些部分</p>
+  <h1>伪类选择器 :focus</h1>
+  <input class="wz-ex3" type="text" autofocus>
+  <h1>选中checkedinput 的后面的label标签</h1>
+  <label for="wz-inp">label</label>
+  <input id="wz-inp" type="checkbox" >选择1 <br>
+  
+</body>
+</html>

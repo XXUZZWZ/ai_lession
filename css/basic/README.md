@@ -132,103 +132,16 @@ p,h1,body,div,span·····等
             :enabled 可用的元素
             :disabled 禁用的元素
             :checked 选中的元素
-            :first-child 第一个子元素
+        3.结构伪类
+             :first-child 第一个子元素
             :last-child 最后一个子元素
             :nth-child(n) 第n个子元素
             :nth-last-child(n) 倒数第n个子元素
-            :first-of-type 第一个同类型元素
-            :last-of-type 最后一个同类型元素
-            :nth-of-type(n) 第n个同类型元素
-            :nth-last-of-type(n) 倒数第n个同类型元素
-## 盒子模型
-    盒子模型：
-        1. 内容区
-        2. 内边距
-        3. 边框
-        4. 外边距
-    盒子模型的属性：
-        1. width:宽度
-        2. height:高度
-        3. padding:内边距
-        4. border:边框
-        5. margin:外边距
-        6. box-sizing:盒子模型
-            1. content-box:默认值，盒子模型的宽度和高度只包括内容区
-            2. border-box:盒子模型的宽度和高度包括内容区、内边距和边框
-            3. inherit:继承父元素的box-sizing属性
-            4. initial:初始值
-            5. unset:取消设置
-            6. revert:重置为默认值
-            7. revert-layer:重置为层叠值
-            8. all:所有属性
-            9. none:所有属性
-            10. unset:所有属性
-            11. revert:所有属性
-            12. revert-layer:所有属性
-            13. content-box:所有属性
-            14. border-box:所有属性 
-  
-## 布局
-    1. 浮动布局
-        1. 浮动元素会脱离文档流
-        2. 浮动元素会向左或向右移动，直到碰到父元素的边界或另一个浮动元素
-        3. 浮动元素不会影响其他元素的位置
-        4. 浮动元素会影响父元素的高度
-        5. 浮动元素会影响其他元素的布局
-    2 . 绝对定位布局
-        1. 绝对定位元素会脱离文档流
-        2. 绝对定位元素会向左或向右移动，直到碰到父元素的边界或另一个绝对定位元素
-        3. 绝对定位元素不会影响其他元素的位置
-        4. 绝对定位元素会影响父元素的高度
-    3. flex布局
-        1. flex布局是一种一维布局
-        2. flex布局是一种弹性布局
-        3. flex布局是一种自适应布局
-        基本属性：
-            1. flex-direction:主轴方向
-            2. flex-wrap:换行
-            3. flex-flow:主轴方向和换行
-            4. justify-content:主轴对齐方式
-            5. align-items:交叉轴对齐方式
-            6. align-content:交叉轴对齐方式
-            7. flex:弹性
-            8. order:顺序
-            9. flex-grow:放大比例
-            10. flex-shrink:缩小比例
-    4 . grid布局
-        1. grid布局是一种二维布局
-        2. grid布局是一种网格布局
-        3. grid布局是一种自适应布局
-        基本属性：
-            1. grid-template-columns:列宽
-            2. grid-template-rows:行高
-            3. grid-template-areas:网格区域
-            4. grid-gap:网格间距
-            5. grid-column-gap:列间距
-            6. grid-row-gap:行间距
-            7. grid-column:列
-            8. grid-row:行
-    5. 媒体查询
-        1. 媒体查询是一种响应式布局
-        2. 媒体查询是一种自适应布局
-        3. 媒体查询是一种媒体类型
-        基本属性：
-        //这个的意思是当屏幕宽度小于768px时，body的背景颜色为红色
-            1. @media screen and (max-width: 768px) {
-                body {
-                    background-color: red;
-                }
-            }
-        //这个的意思是当屏幕宽度大于768px且小于1024px时，body的背景颜色为蓝色，这里的大小为[)区间
-            2. @media screen and (min-width: 768px) and (max-width: 1024px) {
-                body {
-                    background-color: blue;
-                }
-            }
-        //这个的意思是当屏幕宽度大于1024px时，body的背景颜色为绿色
-            3. @media screen and (min-width: 1024px) {
-                body {
-                    background-color: green;
-                }
-            }
+ 
+
+ 如果我们要选择.container 里面的第三个元素，我们怎么写？
+   .container p:nth-of-type(3){
+    background-color: red;
+    color:#fff;
+   }
     

@@ -20,8 +20,18 @@
     color: red;
     border: 2px solid #4ecd94;
   }
-  #wz-inp input:checked+label{
-    font-weight: bold;
+  input:checked + label{
+    font-weight: 700 ;
+    color: #c41b24;
+    font-size: 30px;
+    background-color: #34b4bd;
+  }
+  /* 结构伪类选择器 */
+  li:nth-child(odd){
+    background-color: #34b4bd;
+  }
+  li:not(:last-child){
+    margin-bottom: 10px;
   }
 </style>
 <body>
@@ -31,9 +41,16 @@
   <p class="wz-ex2">当鼠标选中某些部分</p>
   <h1>伪类选择器 :focus</h1>
   <input class="wz-ex3" type="text" autofocus>
-  <h1>选中checkedinput 的后面的label标签</h1>
-  <label for="wz-inp">label</label>
-  <input id="wz-inp" type="checkbox" >选择1 <br>
-  
+  <h1>选中 checked 状态的 input 的后面的label标签</h1>
+  <h1>相邻兄弟选择器 + 号 </h1>
+  <label for="wz-inp">我是input前面紧挨着的label嗷嗷嗷</label>
+  <input id="wz-inp" type="checkbox" >选择1
+  <label for="wz-inp">我是input后面紧挨着的label嗷嗷嗷</label>
+  <ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+  </ul>
 </body>
 </html>

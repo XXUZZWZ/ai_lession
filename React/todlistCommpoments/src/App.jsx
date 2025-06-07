@@ -1,10 +1,9 @@
-import { useState } from 'react'
+// 内置的hook 函数 
 import './App.css'
 import TodoList from './components/TodoList'
 
 function App() {
- const [list,setlist] = useState([]);
-
+ 
  return (
   <>
     <TodoList/>

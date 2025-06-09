@@ -1,31 +1,41 @@
+/* 主容器布局 - 弹性布局实现响应式排列 */
 main {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: flex;          /* 启用弹性布局 */
+  justify-content: center;/* 水平居中 */
+  flex-wrap: wrap;        /* 允许子元素换行 */
 }
+
+/* 单个电影卡片容器 */
 .movie {
-  width: 300px;
-  margin: 1rem;
-  position: relative;
+  width: 300px;           /* 固定宽度 */
+  margin: 1rem;           /* 外边距 */
+  position: relative;     /* 为子元素绝对定位提供参照 */
 }
+
+/* 电影海报图片样式 */
 .movie img {
-  width: 100%;
- 
+  width: 100%;            /* 撑满父容器宽度 */
+  /* 建议添加 height: auto 保持比例 */
 }
+
+/* 详情介绍面板（初始隐藏） */
 .overview {
-  background-color: #fff;
-  padding: 2rem;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  min-height: 100%;
-  transform: translateY(101%);
-  overflow-y: hidden;
-  transition: transform 0.3s ease-in-out;
-  
+
+  background-color: #fff; /* 白色背景 */
+  padding: 2rem;          /* 内边距 */
+  position: absolute;     /* 绝对定位 */
+  left: 0;                /* 对齐父容器左侧 */
+  bottom: 0;              /* 初始位置在底部 */
+  right: 0;               /* 对齐父容器右侧 */
+  min-height: 93%;       /* 最小高度与父容器同高 */
+  transform: translateY(101%); /* 下移自身高度+1%实现隐藏 */
+  overflow-y: hidden;     /* 隐藏溢出内容 */
+  transition: transform 0.3s ease-in-out; /* 过渡动画效果 */
 }
+
+/* 鼠标悬停时触发动画 */
 .movie:hover .overview {
-  transform: translateY(0);
-  transition: transform 0.3s ease-in-out;
+  transform: translateY(0); /* 复位到原始位置 */
+
+  /* 建议添加 max-height 限制防止过长内容溢出 */
 }

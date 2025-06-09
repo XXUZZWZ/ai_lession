@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电影推荐系统</title>
+    <style>
+        /* 内联CSS样式 */
+        main {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .movie {
+            width: 300px;
+            margin: 1rem;
+            position: relative;
+        }
+        .movie img {
+            width: 100%;
+            height: auto;
+        }
+        .overview {
+            background: #fff;
+            padding: 2rem;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            min-height: 93%;
+            transform: translateY(101%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .movie:hover .overview {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <form id="form">
+            <input type="text" 
+                   id="search" 
+                   placeholder="输入电影名称"
+                   required>
+        </form>
+    </header>
+    <main id="main"></main>
+
+    <script>
+        // 内联JavaScript代码
+        const API_URL = 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=3fd2be6f0c70a2a598f084ddfb75487c&page=1'
+        const IMG_PATH = 'https://image.tmdb.org/t/p/w1280'
+        const SEARCH_API = 'https://api.themoviedb.org/3/search/movie?api_key=3fd2be6f0c70a2a598f084ddfb75487c&query="'
+
+        const getMovies = (keyword) => {
+            const reqUrl = keyword ? SEARCH_API + keyword : API_URL
+            fetch(reqUrl)
+                .then(res => res.json())
+                .then(data => showMovies(data.results))
+        }
+
+        const showMovies = (movies) => {
+            document.getElementById('main').innerHTML = movies.map(movie => `
+                <div class="movie">
+                    <img src="${IMG_PATH + movie.poster_path}" alt="${movie.title}">
+                    <div class="movie-info">
+                        <h3>${movie.title}</h3>
+                        <span>${movie.vote_average}</span>
+                    </div>
+                    <div class="overview">
+                        <h3>剧情简介</h3>
+                        ${movie.overview}
+                    </div>
+                </div>
+            `).join('')
+        }
+
+        // 初始化加载
+        window.onload = () => getMovies()
+        
+        // 搜索功能
+        document.getElementById('form').addEventListener('submit', (e) => {
+            e.preventDefault()
+            const search = document.getElementById('search').value.trim()
+            if(search) getMovies(search)
+        })
+    </script>
+</body>
+</html>

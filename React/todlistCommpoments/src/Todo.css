@@ -80,8 +80,66 @@ button.wz-btn:hover {
 
 /* 复选框样式调整 */
 input[type="checkbox"] {
+  display: block;
   accent-color: var(--leaf-green);
   width: 18px;
   height: 18px;
   border: 2px solid var(--wood);
+  border-radius: 50%;
 }
+
+/* AI侧边栏样式 */
+.aisidebar {
+  position: fixed;
+  right: 0;
+  top: 120px;
+  width: 260px;
+  background: rgba(255,255,255,0.4); /* 增加透明度 */
+  border-radius: 10px 0 0 10px;
+  transition: transform 0.3s ease;
+  cursor: move;
+}
+
+.aisidebar.collapsed {
+  transform: translateX(240px);
+  background: rgba(255,255,255,0.9); /* 收起时按钮保持可见 */
+}
+
+.sidebar-header {
+  background: rgba(255,255,255,0.9); /* 标题栏保持可见 */
+  padding: 1rem;
+}
+  /* AI侧边栏优化 */
+  .aisidebar {
+    transition: all 0.3s ease;
+    width: 280px;
+  }
+  
+  .aisidebar.collapsed {
+    width: 60px;
+    padding: 1rem;
+  }
+  
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .toggle-btn {
+    background: none;
+    border: 2px solid #e0e0e0;
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    .aisidebar {
+      width: 100%;
+      right: 0;
+      bottom: 0;
+      top: auto;
+      border-radius: 10px 10px 0 0;
+    }
+
+  }

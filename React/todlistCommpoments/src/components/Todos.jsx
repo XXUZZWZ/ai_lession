@@ -1,8 +1,7 @@
-import { useState } from'react';
 function Todos(props){
   // 父子组件传参
   const todos = props.todos;
-  const [completed,setCompleted] = useState(false);
+  
   const handleCommplete = (e, todo) => {  // 增加todo参数
     props.onCompleted(todo);  // 调用父组件回调
   }
@@ -23,6 +22,7 @@ function Todos(props){
     </ul>
   )
 }
+
 
 
 export default Todos;

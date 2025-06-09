@@ -3,6 +3,7 @@ import TodoForm from './TodoForm'
 import { useState } from 'react'
 import Todos from './Todos'
 import Completed from './Completed'
+import AISidebar from './AISidebar'
 function TodoList(){
  // 数据驱动的页面
     // 静态页面 ？===> 数组的map(``).join()-->innerHTML  底层的api编程
@@ -62,6 +63,9 @@ function TodoList(){
    <div className="forest-container">
      <h1>🌲 待办清单</h1>
      <TodoForm onAdd={handleAdd}/>
+     <div className="aisidebar">
+       <AISidebar todos={todos}/>
+     </div>
      <div className="lists-wrapper">
        <div className="active-list">
          <h1>进行中 🌱</h1>

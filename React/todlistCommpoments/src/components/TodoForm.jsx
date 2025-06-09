@@ -1,7 +1,7 @@
 import { useState } from "react";
 function TodoForm (props){ 
   const onAdd = props.onAdd;
-  const [text,setText] = useState('打打打');
+  const [text,setText] = useState('');
  const  handleSubmit = (e) =>{
  
   // 我们要阻止默认行为
@@ -17,12 +17,12 @@ const handleChange =(e) =>{
 
 }
   return (
-    <form action="http://www.baidu.com" onSubmit={handleSubmit}>
+    <form action="http://www.baidu.com"onSubmit={handleSubmit} >
       <input type="text"
        placeholder="请输入待办"
         value={text}
         onChange={handleChange} />
-      <button type="submit">添加</button>
+      <button className="wz-btn" type="submit">添加</button>
     </form>
   )
 }

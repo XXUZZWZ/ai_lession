@@ -2,6 +2,7 @@ import '../Todo.css'
 import TodoForm from './TodoForm'
 import { useState } from 'react'
 import Todos from './Todos'
+import Completed from './Completed'
 function TodoList(){
  // 数据驱动的页面
     // 静态页面 ？===> 数组的map(``).join()-->innerHTML  底层的api编程
@@ -16,7 +17,6 @@ function TodoList(){
    // setTodos 更新数据 DOM及动态更新 
    // 响应式页面开发
    const [title,setTitle] = useState('TodoList');
-   const [hi,sethi] = useState('hhhh');// 返回 [hhhh,f] setHi 修改数据状态的方法
    const [todos,setTodos] = useState([
    {
      id:1,
@@ -34,6 +34,16 @@ function TodoList(){
       }
     ])
   }
+  const handleCommplete = (todo) =>{
+    setTodos(todos
+      .map(t =>{
+      if(t.id === todo.id){
+        return{...t,completed:!t.completed}
+      }else{
+        return t;
+      }
+    }))
+  }
   
  
 //  setTimeout(()=>{
@@ -49,14 +59,21 @@ function TodoList(){
 //    ])
 //  },3000)
   return (
-   <>
-   {/* // 表单 */}
-    <TodoForm onAdd = {handleAdd}/>
-    {/* 列表 */}
-    <h1 className='title'> {title} </h1>
-    <Todos todos={todos} />
-   </>
-  )
+   <div className="forest-container">
+     <h1>🌲 待办清单</h1>
+     <TodoForm onAdd={handleAdd}/>
+     <div className="lists-wrapper">
+       <div className="active-list">
+         <h1>进行中 🌱</h1>
+         <Todos todos={todos} onCompleted={handleCommplete}/>
+       </div>
+       <div className="completed-list">
+         <h1>已完成 🌳</h1>
+         <Completed todos={todos} onCompleted={handleCommplete}/>
+       </div>
+     </div>
+   </div>
+   )
 }
 
 

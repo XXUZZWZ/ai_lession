@@ -1,3 +1,87 @@
+.forest-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(255,255,255,0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.lists-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.active-list, .completed-list {
+  padding: 1.5rem;
+  border-radius: 10px;
+  background: #f8fbf3;
+}
+
+.active-list {
+  border: 2px solid var(--leaf-green);
+}
+
+.completed-list {
+  border: 2px solid var(--wood);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  background: #e8f5e9;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 li{
   color: #bd1010;
+}
+
+/* 新增输入框样式 */
+input[type="text"] {
+  padding: 0.8rem;
+  border: 2px solid var(--wood);
+  border-radius: 25px;
+  background: #f8fbf3;
+  width: 70%;
+  margin-right: 1rem;
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 0 8px var(--moss);
+}
+
+/* 新增按钮样式 */
+button.wz-btn {
+  background: var(--forest-green) !important;
+  color: white;
+  border: 2px solid var(--leaf-green) !important;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+}
+
+button.wz-btn:hover {
+  background: var(--moss) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* 复选框样式调整 */
+input[type="checkbox"] {
+  accent-color: var(--leaf-green);
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--wood);
 }

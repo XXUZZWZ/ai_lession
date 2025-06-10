@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio</title>
+</head>
+
+<body>
+  <audio src="./sounds/tlj.mp3"></audio>
+  <button onclick="alert('你还会吗？')">播放，原始事件</button>
+  <script>
+    const oAudio = document.querySelector('audio')
+    document.querySelector('#paly').onclick = function () {
+      oAudio.play()
+    }
+  </script>
+</body>
+
+</html>

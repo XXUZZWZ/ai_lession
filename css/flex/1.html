@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>两列布局 layout</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .container {
+      /* 宽度是弹性的 */
+      display: flex;
+      /* 对内管理着子元素 */
+      flex-direction: row;
+      /* direction 主轴方向 ，格式化上下文 默认是主轴是 row*/
+      /* 左边是侧边栏固定200px，主题内容自适应 宽度  */
+    }
+
+    .container aside {
+      flex: 1 1 400px;
+      background-color: pink;
+    }
+
+    .container main {
+      flex: 1 2 500px;
+      /* 没有别的元素和它抢宽度 所以沾满其他内容
+      flex-grow:1
+      flex-shrink:0
+      flex-basis: 100px
+      太大的：先分配 100px ,其余部分按比例 flex-grow分配
+      太小的：按 flex-basis*flex-shrink权重缩小
+      */
+      
+      background-color: blue;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- html + css 做好布局  只有块级，行内不够 -->
+  <!-- display 页面元素的文档流输出 -->
+  <!-- 解决行列 就解决了布局 -->
+  <!-- 行内元素 安安分分 的文字等内容-->
+
+  <div class="container">
+    <aside>侧边栏（广告或菜单）</aside>
+    <main>
+      主题内容
+    </main>
+  </div>
+</body>
+
+</html>

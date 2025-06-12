@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 深拷贝实现详解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #e0e0e0;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .code-section {
+            flex: 1;
+            min-width: 500px;
+            background: #2c3e50;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            color: #ecf0f1;
+        }
+        
+        .visualization {
+            flex: 1;
+            min-width: 500px;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ff7e5f;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #1e272e;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .code-line {
+            margin: 8px 0;
+            display: flex;
+        }
+        
+        .line-number {
+            color: #7f8c8d;
+            width: 30px;
+            user-select: none;
+        }
+        
+        .code {
+            flex: 1;
+        }
+        
+        .comment {
+            color: #27ae60;
+        }
+        
+        .keyword {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .function {
+            color: #3498db;
+        }
+        
+        .string {
+            color: #f1c40f;
+        }
+        
+        .explanation {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .object-display {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+            font-family: monospace;
+            white-space: pre;
+            overflow: auto;
+            max-height: 300px;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+        }
+        
+        .interactive-section {
+            background: #34495e;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            color: white;
+        }
+        
+        .test-cases {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            background: #3498db;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .test-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .result-section {
+            background: #1e272e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            color: #ecf0f1;
+            font-family: monospace;
+            white-space: pre;
+            overflow: auto;
+            max-height: 200px;
+        }
+        
+        .highlight {
+            background: rgba(231, 76, 60, 0.2);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        .key-points {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 4px solid #2ecc71;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .key-points h3 {
+            color: #2ecc71;
+            margin-bottom: 10px;
+        }
+        
+        .key-points ul {
+            padding-left: 20px;
+        }
+        
+        .key-points li {
+            margin: 8px 0;
+        }
+        
+        @media (max-width: 1100px) {
+            .content-wrapper {
+                flex-direction: column;
+            }
+            
+            .code-section, .visualization {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>深入理解 JavaScript 深拷贝</h1>
+            <p class="subtitle">本教程将详细讲解如何实现一个健壮的深拷贝函数，处理各种数据类型、循环引用和特殊对象</p>
+        </header>
+        
+        <div class="content-wrapper">
+            <div class="code-section">
+                <h2 class="section-title">深拷贝实现代码</h2>
+                
+                <div class="code-block">
+                    <div class="code-line">
+                        <div class="line-number">1</div>
+                        <div class="code"><span class="keyword">function</span> <span class="function">deepClone</span>(source, <span class="keyword">map</span> = <span class="keyword">new</span> <span class="function">WeakMap</span>()) {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">2</div>
+                        <div class="code">  <span class="comment">// 处理原始类型和函数</span></div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">3</div>
+                        <div class="code">  <span class="keyword">if</span> (<span class="keyword">typeof</span> source !== <span class="string">'object'</span> || source === <span class="keyword">null</span>) {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">4</div>
+                        <div class="code">    <span class="keyword">return</span> source;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">5</div>
+                        <div class="code">  }</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">6</div>
+                        <div class="code">&nbsp;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">7</div>
+                        <div class="code">  <span class="comment">// 处理循环引用</span></div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">8</div>
+                        <div class="code">  <span class="keyword">if</span> (<span class="keyword">map</span>.<span class="function">has</span>(source)) {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">9</div>
+                        <div class="code">    <span class="keyword">return</span> <span class="keyword">map</span>.<span class="function">get</span>(source);</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">10</div>
+                        <div class="code">  }</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">11</div>
+                        <div class="code">&nbsp;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">12</div>
+                        <div class="code">  <span class="comment">// 处理日期对象</span></div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">13</div>
+                        <div class="code">  <span class="keyword">if</span> (source <span class="keyword">instanceof</span> <span class="function">Date</span>) {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">14</div>
+                        <div class="code">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">Date</span>(source);</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">15</div>
+                        <div class="code">  }</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">16</div>
+                        <div class="code">&nbsp;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">17</div>
+                        <div class="code">  <span class="comment">// 处理正则表达式</span></div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">18</div>
+                        <div class="code">  <span class="keyword">if</span> (source <span class="keyword">instanceof</span> <span class="function">RegExp</span>) {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">19</div>
+                        <div class="code">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="function">RegExp</span>(source);</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">20</div>
+                        <div class="code">  }</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">21</div>
+                        <div class="code">&nbsp;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">22</div>
+                        <div class="code">  <span class="comment">// 处理Map</span></div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">23</div>
+                        <div class="code">  <span class="keyword">if</span> (source <span class="keyword">instanceof</span> <span class="function">Map</span>) {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">24</div>
+                        <div class="code">    <span class="keyword">const</span> cloneMap = <span class="keyword">new</span> <span class="function">Map</span>();</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">25</div>
+                        <div class="code">    <span class="keyword">map</span>.<span class="function">set</span>(source, cloneMap);</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">26</div>
+                        <div class="code">    source.<span class="function">forEach</span>((value, key) => {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">27</div>
+                        <div class="code">      cloneMap.<span class="function">set</span>(<span class="function">deepClone</span>(key, <span class="keyword">map</span>), <span class="function">deepClone</span>(value, <span class="keyword">map</span>));</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">28</div>
+                        <div class="code">    });</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">29</div>
+                        <div class="code">    <span class="keyword">return</span> cloneMap;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">30</div>
+                        <div class="code">  }</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">31</div>
+                        <div class="code">&nbsp;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">32</div>
+                        <div class="code">  <span class="comment">// 处理Set</span></div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">33</div>
+                        <div class="code">  <span class="keyword">if</span> (source <span class="keyword">instanceof</span> <span class="function">Set</span>) {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">34</div>
+                        <div class="code">    <span class="keyword">const</span> cloneSet = <span class="keyword">new</span> <span class="function">Set</span>();</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">35</div>
+                        <div class="code">    <span class="keyword">map</span>.<span class="function">set</span>(source, cloneSet);</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">36</div>
+                        <div class="code">    source.<span class="function">forEach</span>(value => {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">37</div>
+                        <div class="code">      cloneSet.<span class="function">add</span>(<span class="function">deepClone</span>(value, <span class="keyword">map</span>));</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">38</div>
+                        <div class="code">    });</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">39</div>
+                        <div class="code">    <span class="keyword">return</span> cloneSet;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">40</div>
+                        <div class="code">  }</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">41</div>
+                        <div class="code">&nbsp;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">42</div>
+                        <div class="code">  <span class="comment">// 处理数组和普通对象</span></div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">43</div>
+                        <div class="code">  <span class="keyword">const</span> clone = <span class="keyword">Array</span>.<span class="function">isArray</span>(source) ? [] : {};</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">44</div>
+                        <div class="code">  <span class="keyword">map</span>.<span class="function">set</span>(source, clone);</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">45</div>
+                        <div class="code">&nbsp;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">46</div>
+                        <div class="code">  <span class="keyword">const</span> keys = [...<span class="function">Object</span>.<span class="function">getOwnPropertyNames</span>(source), ...<span class="function">Object</span>.<span class="function">getOwnPropertySymbols</span>(source)];</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">47</div>
+                        <div class="code">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">of</span> keys) {</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">48</div>
+                        <div class="code">    clone[key] = <span class="function">deepClone</span>(source[key], <span class="keyword">map</span>);</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">49</div>
+                        <div class="code">  }</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">50</div>
+                        <div class="code">&nbsp;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">51</div>
+                        <div class="code">  <span class="keyword">return</span> clone;</div>
+                    </div>
+                    <div class="code-line">
+                        <div class="line-number">52</div>
+                        <div class="code">}</div>
+                    </div>
+                </div>
+                
+                <div class="explanation">
+                    <h3>代码解析</h3>
+                    <p>这是一个健壮的深拷贝实现，包含以下关键点：</p>
+                    <ul>
+                        <li>使用 <span class="highlight">WeakMap</span> 解决循环引用问题</li>
+                        <li>处理基本数据类型、函数、日期、正则表达式等特殊对象</li>
+                        <li>支持 <span class="highlight">Map</span> 和 <span class="highlight">Set</span> 的拷贝</li>
+                        <li>支持 <span class="highlight">Symbol</span> 作为属性名</li>
+                        <li>递归处理对象和数组</li>
+                    </ul>
+                </div>
+                
+                <div class="key-points">
+                    <h3>深拷贝关键知识点</h3>
+                    <ul>
+                        <li><strong>浅拷贝 vs 深拷贝</strong>：浅拷贝只复制一层属性，深拷贝递归复制所有层级</li>
+                        <li><strong>循环引用问题</strong>：当对象内部存在相互引用时，会导致无限递归</li>
+                        <li><strong>特殊对象处理</strong>：Date、RegExp等内置对象需要特殊处理</li>
+                        <li><strong>WeakMap的使用</strong>：存储已拷贝对象，解决循环引用问题</li>
+                        <li><strong>性能考虑</strong>：深拷贝是昂贵的操作，应避免在大型对象上使用</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="visualization">
+                <h2 class="section-title">深拷贝可视化</h2>
+                
+                <div class="object-display" id="original-object">
+                    // 原始对象将显示在这里
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <svg width="100" height="60" viewBox="0 0 100 60">
+                        <path d="M10,30 L90,30" stroke="#3498db" stroke-width="2" fill="none"/>
+                        <polygon points="90,30 70,25 70,35" fill="#3498db"/>
+                        <text x="50" y="25" text-anchor="middle" fill="#3498db" font-weight="bold">深拷贝</text>
+                    </svg>
+                </div>
+                
+                <div class="object-display" id="cloned-object">
+                    // 克隆后的对象将显示在这里
+                </div>
+                
+                <div id="comparison-result" style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px; display: none;">
+                    <h3 style="color: #2c3e50;">比较结果</h3>
+                    <div id="comparison-text" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interactive-section">
+            <h2 class="section-title">深拷贝测试</h2>
+            <p>选择测试用例查看深拷贝效果：</p>
+            
+            <div class="test-cases">
+                <button class="test-btn" data-test="simple">简单对象</button>
+                <button class="test-btn" data-test="nested">嵌套对象</button>
+                <button class="test-btn" data-test="array">数组</button>
+                <button class="test-btn" data-test="date">日期对象</button>
+                <button class="test-btn" data-test="regex">正则表达式</button>
+                <button class="test-btn" data-test="circular">循环引用</button>
+                <button class="test-btn" data-test="map">Map对象</button>
+                <button class="test-btn" data-test="set">Set对象</button>
+            </div>
+            
+            <div class="result-section" id="test-result">
+                // 测试结果将显示在这里
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 实现深拷贝函数
+        function deepClone(source, map = new WeakMap()) {
+            // 处理原始类型和函数
+            if (typeof source !== 'object' || source === null) {
+                return source;
+            }
+
+            // 处理循环引用
+            if (map.has(source)) {
+                return map.get(source);
+            }
+
+            // 处理日期对象
+            if (source instanceof Date) {
+                return new Date(source);
+            }
+
+            // 处理正则表达式
+            if (source instanceof RegExp) {
+                return new RegExp(source);
+            }
+
+            // 处理Map
+            if (source instanceof Map) {
+                const cloneMap = new Map();
+                map.set(source, cloneMap);
+                source.forEach((value, key) => {
+                    cloneMap.set(deepClone(key, map), deepClone(value, map));
+                });
+                return cloneMap;
+            }
+
+            // 处理Set
+            if (source instanceof Set) {
+                const cloneSet = new Set();
+                map.set(source, cloneSet);
+                source.forEach(value => {
+                    cloneSet.add(deepClone(value, map));
+                });
+                return cloneSet;
+            }
+
+            // 处理数组和普通对象
+            const clone = Array.isArray(source) ? [] : {};
+            map.set(source, clone);
+
+            // 获取所有属性（包括Symbol）
+            const keys = [...Object.getOwnPropertyNames(source), ...Object.getOwnPropertySymbols(source)];
+            for (const key of keys) {
+                clone[key] = deepClone(source[key], map);
+            }
+
+            return clone;
+        }
+
+        // 测试用例
+        const testCases = {
+            simple: {
+                name: "简单对象",
+                obj: {
+                    id: 1,
+                    name: "John Doe",
+                    active: true
+                }
+            },
+            nested: {
+                name: "嵌套对象",
+                obj: {
+                    user: {
+                        id: 2,
+                        name: "Jane Smith",
+                        preferences: {
+                            theme: "dark",
+                            notifications: true
+                        }
+                    },
+                    roles: ["admin", "editor"]
+                }
+            },
+            array: {
+                name: "数组",
+                obj: [
+                    { id: 1, value: "first" },
+                    { id: 2, value: "second" },
+                    { id: 3, value: "third" }
+                ]
+            },
+            date: {
+                name: "日期对象",
+                obj: {
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                }
+            },
+            regex: {
+                name: "正则表达式",
+                obj: {
+                    pattern: /^test\d+/gi,
+                    flags: "gi"
+                }
+            },
+            circular: {
+                name: "循环引用",
+                obj: (() => {
+                    const obj = { name: "循环对象" };
+                    obj.self = obj;
+                    return obj;
+                })()
+            },
+            map: {
+                name: "Map对象",
+                obj: (() => {
+                    const map = new Map();
+                    map.set("key1", "value1");
+                    map.set("key2", { nested: "object" });
+                    return map;
+                })()
+            },
+            set: {
+                name: "Set对象",
+                obj: (() => {
+                    const set = new Set();
+                    set.add("item1");
+                    set.add({ id: 2 });
+                    return set;
+                })()
+            }
+        };
+
+        // 显示对象函数
+        function displayObject(obj, elementId) {
+            const element = document.getElementById(elementId);
+            try {
+                element.textContent = JSON.stringify(obj, (key, value) => {
+                    if (typeof value === 'symbol') {
+                        return value.toString();
+                    }
+                    if (value instanceof Map) {
+                        return {
+                            dataType: 'Map',
+                            value: Array.from(value.entries())
+                        };
+                    }
+                    if (value instanceof Set) {
+                        return {
+                            dataType: 'Set',
+                            value: Array.from(value)
+                        };
+                    }
+                    if (value instanceof RegExp) {
+                        return value.toString();
+                    }
+                    if (value instanceof Date) {
+                        return value.toISOString();
+                    }
+                    return value;
+                }, 2);
+            } catch (e) {
+                element.textContent = "无法序列化对象: " + e.message;
+            }
+        }
+
+        // 比较对象是否相等
+        function objectsEqual(a, b) {
+            if (a === b) return true;
+            
+            if (a instanceof Date && b instanceof Date) 
+                return a.getTime() === b.getTime();
+            
+            if (a instanceof RegExp && b instanceof RegExp)
+                return a.toString() === b.toString();
+            
+            if (a instanceof Map && b instanceof Map) {
+                if (a.size !== b.size) return false;
+                for (const [key, value] of a) {
+                    if (!b.has(key) || !objectsEqual(value, b.get(key))) 
+                        return false;
+                }
+                return true;
+            }
+            
+            if (a instanceof Set && b instanceof Set) {
+                if (a.size !== b.size) return false;
+                for (const value of a) {
+                    if (!b.has(value)) 
+                        return false;
+                }
+                return true;
+            }
+            
+            if (typeof a !== 'object' || a === null || 
+                typeof b !== 'object' || b === null) {
+                return false;
+            }
+            
+            const keysA = Object.keys(a);
+            const keysB = Object.keys(b);
+            
+            if (keysA.length !== keysB.length) return false;
+            
+            for (const key of keysA) {
+                if (!objectsEqual(a[key], b[key])) 
+                    return false;
+            }
+            
+            return true;
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            const testButtons = document.querySelectorAll('.test-btn');
+            const originalDisplay = document.getElementById('original-object');
+            const clonedDisplay = document.getElementById('cloned-object');
+            const testResult = document.getElementById('test-result');
+            const comparisonResult = document.getElementById('comparison-result');
+            const comparisonText = document.getElementById('comparison-text');
+            
+            // 默认显示简单对象
+            displayTest('simple');
+            
+            // 为测试按钮添加事件监听
+            testButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const testType = button.dataset.test;
+                    displayTest(testType);
+                });
+            });
+            
+            function displayTest(testType) {
+                const testCase = testCases[testType];
+                const original = testCase.obj;
+                const cloned = deepClone(original);
+                
+                // 显示原始对象和克隆对象
+                displayObject(original, 'original-object');
+                displayObject(cloned, 'cloned-object');
+                
+                // 显示测试结果
+                testResult.textContent = `测试用例: ${testCase.name}\n\n` +
+                    `原始对象类型: ${original?.constructor?.name || typeof original}\n` +
+                    `克隆对象类型: ${cloned?.constructor?.name || typeof cloned}\n\n` +
+                    `原始对象和克隆对象${original === cloned ? '是' : '不是'}同一个对象\n` +
+                    `原始对象和克隆对象${objectsEqual(original, cloned) ? '内容相同' : '内容不同'}`;
+                
+                // 显示比较结果
+                comparisonResult.style.display = 'block';
+                if (testType === 'circular') {
+                    comparisonText.innerHTML = `
+                        <p>循环引用处理结果:</p>
+                        <ul>
+                            <li>原始对象: ${original.self === original ? '自引用成功' : '自引用失败'}</li>
+                            <li>克隆对象: ${cloned.self === cloned ? '自引用成功' : '自引用失败'}</li>
+                            <li>原始对象和克隆对象不是同一个对象: ${original !== cloned}</li>
+                        </ul>
+                    `;
+                } else {
+                    comparisonText.innerHTML = `
+                        <p>深拷贝成功!</p>
+                        <ul>
+                            <li>克隆对象类型正确: ${original.constructor.name === cloned.constructor.name}</li>
+                            <li>原始对象和克隆对象内容相同: ${objectsEqual(original, cloned)}</li>
+                            <li>原始对象和克隆对象不是同一个对象: ${original !== cloned}</li>
+                        </ul>
+                    `;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

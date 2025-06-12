@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>她的话 - 抖音风格卡片</title>
+  <title>智慧语录 - 抖音风格卡片</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link
     href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap"
@@ -29,38 +29,10 @@
       align-items: center;
     }
 
-    .header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 10;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      background: linear-gradient(45deg, #ff9966, #ff5e62);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-family: 'Ma Shan Zheng', cursive;
-    }
-
-    .nav-icons i {
-      font-size: 20px;
-      margin-left: 15px;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
     .container {
       width: 100%;
       max-width: 400px;
-      height: 80vh;
+      height: 95vh;
       position: relative;
       overflow: hidden;
       border-radius: 20px;
@@ -70,9 +42,9 @@
     .card {
       position: absolute;
       width: 90%;
-      height: 75%;
+      height: 85%;
       left: 5%;
-      top: 12%;
+      top: 7%;
       border-radius: 25px;
       padding: 30px;
       display: flex;
@@ -238,12 +210,24 @@
 
     .footer {
       position: fixed;
-      bottom: 20px;
+      bottom: 10px;
       color: rgba(255, 255, 255, 0.6);
       font-size: 14px;
       text-align: center;
       width: 100%;
       padding: 10px;
+    }
+
+    .app-name {
+      position: fixed;
+      top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #ff9966, #ff5e62);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: 'Ma Shan Zheng', cursive;
+      z-index: 1;
     }
 
     /* 动画效果 */
@@ -267,14 +251,19 @@
     /* 响应式设计 */
     @media (max-width: 500px) {
       .container {
-        height: 85vh;
+        height: 90vh;
       }
 
       .card {
-        height: 70%;
+        height: 80%;
       }
 
       .quote {
+        font-size: 22px;
+      }
+
+      .app-name {
+        top: 15px;
         font-size: 22px;
       }
     }
@@ -282,13 +271,7 @@
 </head>
 
 <body>
-  <div class="header">
-    <div class="logo">她的话</div>
-    <div class="nav-icons">
-      <i class="fas fa-search"></i>
-      <i class="fas fa-user"></i>
-    </div>
-  </div>
+  <div class="app-name">智慧语录</div>
 
   <div class="container" id="cardContainer">
     <!-- 卡片将由JavaScript动态生成 -->
@@ -308,14 +291,14 @@
         typeText: "讽刺生活"
       },
       {
-        text: "每天告诉自己一次：'我真的很不错！' 但如果每天说三次，可能会被送进精神病院。",
-        author: "积极心理学（讽刺版）",
+        text: "所谓成熟，就是在听到'波涛汹涌'四个字时，再也联想不到大海了。",
+        author: "成年人的觉悟",
         type: "sarcastic",
         typeText: "讽刺生活"
       },
       {
-        text: "所谓成长，就是在听到'波涛汹涌'四个字时，再也联想不到大海了。",
-        author: "成年人的觉悟",
+        text: "每天告诉自己一次：'我真的很不错！' 但如果每天说三次，可能会被送进精神病院。",
+        author: "积极心理学（讽刺版）",
         type: "sarcastic",
         typeText: "讽刺生活"
       },
@@ -475,6 +458,50 @@
 
       const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
       const diffY = e.changedTouches[0].clientY - startY;
+
+      // 复位动画
+      currentCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      currentCard.style.transform = 'translateY(0)';
+      currentCard.style.opacity = '1';
+
+      // 滑动阈值判断
+      if (diffY > 100 && currentIndex > 0) {
+        prevCard();
+      } else if (diffY < -100 && currentIndex < quotes.length - 1) {
+        nextCard();
+      }
+
+      // 移除过渡效果，为下一次拖动准备
+      setTimeout(() => {
+        currentCard.style.transition = '';
+      }, 300);
+    });
+
+    // 鼠标事件处理（桌面支持）
+    cardContainer.addEventListener('mousedown', e => {
+      startY = e.clientY;
+      isDragging = true;
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+
+      const currentY = e.clientY;
+      const diffY = currentY - startY;
+
+      // 移动当前卡片
+      const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
+      currentCard.style.transform = `translateY(${diffY}px)`;
+      currentCard.style.opacity = `${1 - Math.abs(diffY) / 300}`;
+    });
+
+    document.addEventListener('mouseup', e => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
+      const diffY = e.clientY - startY;
 
       // 复位动画
       currentCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyPromise 实现详解</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f7fa;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .code-section,
+    .visualization {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: #2c3e50;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 15px;
+    }
+
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .comment {
+      color: #3498db;
+    }
+
+    .keyword {
+      color: #e74c3c;
+    }
+
+    .function {
+      color: #9b59b6;
+    }
+
+    .state-pending {
+      background-color: #f39c12;
+    }
+
+    .state-fulfilled {
+      background-color: #2ecc71;
+    }
+
+    .state-rejected {
+      background-color: #e74c3c;
+    }
+
+    .state {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .promise-viz {
+      margin-top: 20px;
+    }
+
+    .promise-box {
+      border: 2px solid #3498db;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      background: white;
+    }
+
+    .promise-header {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .queue {
+      margin-top: 15px;
+      border-top: 1px dashed #ccc;
+      padding-top: 10px;
+    }
+
+    .queue-item {
+      background: #ecf0f1;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .controls {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px 5px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #2980b9;
+    }
+
+    .test-case {
+      background: #e8f4fc;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+
+    .test-case h3 {
+      margin-top: 0;
+    }
+
+    .test-result {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      background: #2c3e50;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>MyPromise 实现详解</h1>
+
+  <div class="container">
+    <div class="code-section">
+      <h2>代码实现与注释</h2>
+      <pre><code>// Promise的三种状态常量
+const PENDING = "pending";
+const FULFILLED = "fulfilled";
+const REJECTED = "rejected";
+
+class MyPromise {
+    // 私有字段：状态（默认为pending）
+    #state = PENDING;
+    // 私有字段：存储Promise的结果或错误
+    #result = undefined;
+    // 私有字段：存储then方法的回调队列
+    #thenables = [];
+    
+    // 构造函数，接收执行器函数（executor）
+    constructor(executor) {
+        // 定义resolve函数
+        const resolve = (data) => {
+            // 调用内部方法改变状态为fulfilled
+            this.#changeState(FULFILLED, data);
+        };
+        
+        // 定义reject函数
+        const reject = (err) => {
+            // 调用内部方法改变状态为rejected
+            this.#changeState(REJECTED, err);
+        };
+        
+        try {
+            // 执行传入的执行器函数，传入resolve和reject
+            executor(resolve, reject);
+        } catch (err) {
+            // 如果执行器抛出异常，直接reject
+            reject(err);
+        }
+    }
+    
+    // 内部方法：改变Promise状态
+    #changeState(state, result) {
+        // 只能从pending状态改变，确保状态不可逆
+        if (this.#state !== PENDING) return;
+        
+        // 更新状态和结果
+        this.#state = state;
+        this.#result = result;
+        
+        // 状态改变后，执行回调队列
+        this.#run();
+    }
+    
+    // 内部方法：处理回调函数
+    #handleCallback(callback, resolve, reject) {
+        // 如果回调不是函数，则实现"值穿透"
+        if (typeof callback !== "function") {
+            // 使用微任务确保异步执行
+            queueMicrotask(() => {
+                // 根据当前状态调用resolve或reject
+                if (this.#state === FULFILLED) {
+                    resolve(this.#result);
+                } else {
+                    reject(this.#result);
+                }
+            });
+            return;
+        }
+        
+        // 使用微任务执行回调
+        queueMicrotask(() => {
+            try {
+                // 执行回调函数，获取返回值
+                const result = callback(this.#result);
+                // 使用返回值解决新的Promise
+                resolve(result);
+            } catch (err) {
+                // 如果回调抛出异常，拒绝新的Promise
+                reject(err);
+            }
+        });
+    }
+    
+    // 内部方法：执行回调队列
+    #run() {
+        // 只有非pending状态才执行
+        if (this.#state === PENDING) return;
+        
+        // 遍历并执行所有回调
+        while (this.#thenables.length) {
+            // 从队列中取出回调对象
+            const { onFulfilled, onRejected, resolve, reject } = 
+                this.#thenables.shift();
+            
+            // 根据当前状态执行对应的回调
+            if (this.#state === FULFILLED) {
+                this.#handleCallback(onFulfilled, resolve, reject);
+            } else {
+                this.#handleCallback(onRejected, resolve, reject);
+            }
+        }
+    }
+    
+    // then方法：添加成功/失败回调，返回新的Promise
+    then(onFulfilled, onRejected) {
+        // 返回新的Promise以实现链式调用
+        return new MyPromise((resolve, reject) => {
+            // 将回调添加到队列
+            this.#thenables.push({
+                onFulfilled,
+                onRejected,
+                resolve,
+                reject,
+            });
+            
+            // 启动队列处理（如果状态已改变）
+            this.#run();
+        });
+    }
+}
+
+// 测试用例
+const testPromise = () => {
+    const p1 = new MyPromise((resolve, reject) => {
+        setTimeout(() => {
+            resolve("Success!");
+        }, 1000);
+    });
+    
+    p1.then(result => {
+        document.getElementById('test-result').innerText = `测试结果: ${result}`;
+        document.getElementById('test-result').className = 'test-result state-fulfilled';
+        return result + " And chained!";
+    }).then(result => {
+        document.getElementById('chained-result').innerText = `链式调用结果: ${result}`;
+        document.getElementById('chained-result').className = 'test-result state-fulfilled';
+    });
+};
+
+// 启动测试
+window.onload = testPromise;</code></pre>
+    </div>
+
+    <div class="visualization">
+      <h2>Promise 状态可视化</h2>
+
+      <div class="promise-viz">
+        <div class="promise-box">
+          <div class="promise-header">
+            <span>Promise 实例</span>
+            <span id="promise-state" class="state state-pending">pending</span>
+          </div>
+          <div id="promise-result">结果: 等待中...</div>
+
+          <div class="queue">
+            <div>回调队列 (<span id="queue-count">0</span>):</div>
+            <div id="queue-items"></div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button onclick="simulateResolve()">模拟 Resolve</button>
+          <button onclick="simulateReject()">模拟 Reject</button>
+          <button onclick="addThenCallback()">添加 then 回调</button>
+          <button onclick="resetPromise()">重置 Promise</button>
+        </div>
+
+        <div class="test-case">
+          <h3>功能测试</h3>
+          <div id="test-result" class="test-result">等待测试结果...</div>
+          <div id="chained-result" class="test-result">等待链式调用结果...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 模拟Promise状态
+    let promiseState = PENDING;
+    let promiseResult = undefined;
+    const thenQueue = [];
+
+    // 状态常量
+    const PENDING = "pending";
+    const FULFILLED = "fulfilled";
+    const REJECTED = "rejected";
+
+    // 更新UI显示
+    function updateUI() {
+      // 更新状态显示
+      const stateElement = document.getElementById('promise-state');
+      stateElement.textContent = promiseState;
+      stateElement.className = `state state-${promiseState}`;
+
+      // 更新结果显示
+      const resultElement = document.getElementById('promise-result');
+      if (promiseState === PENDING) {
+        resultElement.textContent = '结果: 等待中...';
+      } else {
+        resultElement.textContent = `结果: ${promiseResult}`;
+      }
+
+      // 更新队列显示
+      document.getElementById('queue-count').textContent = thenQueue.length;
+      const queueItems = document.getElementById('queue-items');
+      queueItems.innerHTML = '';
+
+      thenQueue.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'queue-item';
+        itemElement.textContent = `回调: ${item.type}`;
+        queueItems.appendChild(itemElement);
+      });
+    }
+
+    // 模拟resolve
+    function simulateResolve() {
+      if (promiseState !== PENDING) return;
+
+      promiseState = FULFILLED;
+      promiseResult = '操作成功!';
+      updateUI();
+
+      // 模拟执行队列
+      processQueue();
+    }
+
+    // 模拟reject
+    function simulateReject() {
+      if (promiseState !== PENDING) return;
+
+      promiseState = REJECTED;
+      promiseResult = '发生错误!';
+      updateUI();
+
+      // 模拟执行队列
+      processQueue();
+    }
+
+    // 处理回调队列
+    function processQueue() {
+      setTimeout(() => {
+        while (thenQueue.length > 0) {
+          const item = thenQueue.shift();
+          updateUI();
+
+          // 模拟回调执行
+          setTimeout(() => {
+            alert(`执行 ${item.type} 回调\n状态: ${promiseState}\n结果: ${promiseResult}`);
+          }, 500);
+        }
+      }, 300);
+    }
+
+    // 添加then回调
+    function addThenCallback() {
+      const types = ['onFulfilled', 'onRejected'];
+      const randomType = types[Math.floor(Math.random() * types.length)];
+
+      thenQueue.push({
+        type: randomType,
+        timestamp: new Date().toLocaleTimeString()
+      });
+
+      updateUI();
+    }
+
+    // 重置Promise
+    function resetPromise() {
+      promiseState = PENDING;
+      promiseResult = undefined;
+      thenQueue.length = 0;
+      updateUI();
+    }
+
+    // 初始化UI
+    updateUI();
+  </script>
+</body>
+
+</html>

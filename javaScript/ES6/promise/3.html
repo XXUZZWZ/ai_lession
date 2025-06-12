@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<ul id="repos">
+  <button type="button" id="btn">加载</button>
+</ul>
+
+<body>
+  <script>
+    // 异步任务
+    // 网络请求
+    // 服务器响应要时间
+
+    // 事件 ，会先注册一些事件，等其他线程执行完毕
+    // 声明 函数是 async 函数
+    // await 函数
+    document.getElementById('btn').addEventListener('click', async () => {
+      console.log('clicked');
+      // dom ready 了，可以尽快发送请求
+      const res = await fetch('https://api.github.com/users/XXUZZWZ/repos')
+      const repos = await res.json();
+
+      repos.forEach(repo => {
+        const li = document.createElement('li');
+        li.innerHTML = repo.name + repo.description + repo.html_url;
+        document.querySelector('#repos').appendChild(li);
+      })
+
+      // document.addEventListener('DOMContentLoaded', () => {
+      //   console.log('DOMContentLoaded')
+      // })
+
+      // window.onload = function () {
+      //   // 网页加载的事件
+      //   console.log('window.onload')
+      // }
+    })
+    /*
+    输出
+    DOMContentLoaded
+    window.onload
+    */
+  </script>
+</body>
+
+</html>

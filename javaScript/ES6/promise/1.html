@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 异步任务 
+    // fetch 网络请求   then 
+    // es6的Promise 异步变同步的解决方案
+    // promise 实例化 是需要传入一个函数，立即运行
+    // promise 实例有一个 .then 方法
+    const p = new Promise((resolve) => {
+      console.log("333");// new 是一个同步
+      setTimeout(() => {// 定时器的注册  
+        console.log("222")
+        resolve();
+      }, 10)
+
+    }
+    );
+    p.then(() => {
+      console.log('111')
+    })
+
+    // console.log(p);
+
+    // 同步任务
+    // 进程  cpu 分配资源的最小单元
+    // 线程 执行代码的最小单元
+    // 应用程序那么多，cpu 怎么干得过来 轮询
+    // 和漫画变成动画片类似
+    // 一秒钟 20帧以上
+    // 一个单位时间可以执行完，同步代码
+    // console.log('111');
+
+
+  </script>
+</body>
+
+</html>

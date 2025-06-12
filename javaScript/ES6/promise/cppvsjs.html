@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>回调函数详解 - C++开发者视角</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+      color: #fff;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1.4rem;
+      max-width: 800px;
+      margin: 0 auto;
+      color: #e0e0e0;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(25, 25, 50, 0.8);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      color: #ff7e5f;
+      border-bottom: 2px solid #ff7e5f;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.6rem;
+      margin: 25px 0 15px;
+      color: #feb47b;
+    }
+
+    .explanation {
+      line-height: 1.8;
+      font-size: 1.2rem;
+    }
+
+    .code-block {
+      background: #1e1e2e;
+      border-radius: 10px;
+      padding: 25px;
+      margin: 20px 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .comment {
+      color: #57a64a;
+    }
+
+    .keyword {
+      color: #569cd6;
+    }
+
+    .function {
+      color: #dcdcaa;
+    }
+
+    .string {
+      color: #ce9178;
+    }
+
+    .visualization {
+      margin-top: 30px;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+    }
+
+    .callback-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      margin: 30px 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background: rgba(255, 126, 95, 0.2);
+      border-radius: 10px;
+    }
+
+    .step-number {
+      font-size: 2rem;
+      font-weight: bold;
+      min-width: 60px;
+      text-align: center;
+      color: #ff7e5f;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .arrow {
+      margin-left: 20px;
+      font-size: 2rem;
+    }
+
+    .examples {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .example-card {
+      background: rgba(30, 30, 46, 0.9);
+      border-radius: 15px;
+      padding: 25px;
+    }
+
+    .test-area {
+      margin-top: 40px;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    button {
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      color: white;
+      border: none;
+      padding: 15px 35px;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      margin: 0 15px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .output {
+      margin-top: 30px;
+      padding: 25px;
+      background: rgba(30, 30, 46, 0.9);
+      border-radius: 15px;
+      min-height: 150px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      text-align: left;
+    }
+
+    .comparison {
+      margin-top: 40px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      padding: 30px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .comparison-card {
+      background: rgba(40, 40, 60, 0.7);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      color: #aaa;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 900px) {
+
+      .content,
+      .examples,
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>回调函数详解</h1>
+      <p class="subtitle">C++开发者视角：理解JavaScript回调函数机制</p>
+    </header>
+
+    <div class="content">
+      <div class="card">
+        <h2>什么是回调函数？</h2>
+        <div class="explanation">
+          <p>回调函数是一个作为参数传递给另一个函数的函数，这个函数在外部函数完成特定操作后被调用。</p>
+
+          <h3>核心概念：</h3>
+          <ul>
+            <li>函数作为一等公民（可以像变量一样传递）</li>
+            <li>异步编程的基础</li>
+            <li>事件驱动编程的核心</li>
+            <li>实现关注点分离</li>
+          </ul>
+
+          <div class="code-block">
+            <span class="comment">// 定义一个接收回调的函数</span><br>
+            <span class="keyword">function</span> <span class="function">processData</span>(data, <span
+              class="function">callback</span>) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 处理数据...</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> result = data * <span
+              class="number">2</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 处理完成后调用回调函数</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">callback</span>(result);<br>
+            }<br><br>
+
+            <span class="comment">// 定义回调函数</span><br>
+            <span class="keyword">function</span> <span class="function">displayResult</span>(result) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="function">log</span>(<span class="string">"结果: "</span> +
+            result);<br>
+            }<br><br>
+
+            <span class="comment">// 使用回调</span><br>
+            <span class="function">processData</span>(<span class="number">5</span>, displayResult); <span
+              class="comment">// 输出: "结果: 10"</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>为什么需要回调函数？</h2>
+        <div class="explanation">
+          <h3>处理异步操作</h3>
+          <p>JavaScript是单线程语言，回调函数允许在异步操作（如网络请求、文件I/O）完成后执行代码。</p>
+
+          <h3>事件处理</h3>
+          <p>对用户交互（点击、键盘输入等）做出响应。</p>
+
+          <h3>模块化设计</h3>
+          <p>将通用逻辑与具体实现分离，提高代码复用性。</p>
+
+          <div class="code-block">
+            <span class="comment">// 异步操作示例</span><br>
+            <span class="function">setTimeout</span>(<span class="keyword">function</span>() {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="function">log</span>(<span class="string">"1.
+              这个回调将在2秒后执行"</span>);<br>
+            }, <span class="number">2000</span>);<br><br>
+
+            console.<span class="function">log</span>(<span class="string">"2. 这个先执行"</span>);<br>
+            <span class="comment">// 输出顺序: 2 → 1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="visualization">
+      <h2>回调函数执行流程</h2>
+      <div class="callback-flow">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>定义主函数</h3>
+            <p>创建一个接收回调函数作为参数的函数</p>
+            <div class="code-block">
+              function mainFunction(callback) {<br>
+              &nbsp;&nbsp;// 执行操作...<br>
+              &nbsp;&nbsp;callback(); // 调用回调<br>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>定义回调函数</h3>
+            <p>创建要在主函数完成后执行的函数</p>
+            <div class="code-block">
+              function myCallback() {<br>
+              &nbsp;&nbsp;console.log("回调执行了!");<br>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>传递回调函数</h3>
+            <p>将回调函数作为参数传递给主函数</p>
+            <div class="code-block">
+              mainFunction(myCallback);
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>执行流程</h3>
+            <p>1. 主函数开始执行<br>
+              2. 主函数完成其操作<br>
+              3. 主函数调用回调函数<br>
+              4. 回调函数执行</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="examples">
+      <div class="example-card">
+        <h3>同步回调示例</h3>
+        <div class="code-block">
+          <span class="comment">// 数组遍历回调</span><br>
+          <span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>,
+          <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];<br><br>
+
+          <span class="comment">// forEach接收一个回调函数</span><br>
+          numbers.<span class="function">forEach</span>(<span class="keyword">function</span>(number) {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="function">log</span>(number * <span class="number">2</span>);<br>
+          });<br>
+          <span class="comment">// 输出: 2, 4, 6, 8, 10</span>
+        </div>
+        <p>回调函数对每个数组元素立即执行</p>
+      </div>
+
+      <div class="example-card">
+        <h3>异步回调示例</h3>
+        <div class="code-block">
+          <span class="comment">// 模拟从服务器获取数据</span><br>
+          <span class="keyword">function</span> <span class="function">fetchData</span>(<span
+            class="function">callback</span>) {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">setTimeout</span>(<span class="keyword">function</span>() {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> data = { <span
+            class="property">name</span>: <span class="string">"John"</span>, <span class="property">age</span>: <span
+            class="number">30</span> };<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="function">callback</span>(data);<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;}, <span class="number">1500</span>);<br>
+          }<br><br>
+
+          <span class="comment">// 使用回调处理数据</span><br>
+          <span class="function">fetchData</span>(<span class="keyword">function</span>(data) {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="function">log</span>(<span class="string">"收到数据:"</span>,
+          data);<br>
+          });<br><br>
+
+          console.<span class="function">log</span>(<span class="string">"获取数据中..."</span>);
+        </div>
+        <p>回调函数在数据准备好后执行</p>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <h2>C++ 与 JavaScript 回调对比</h2>
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h3>C++ 中的回调</h3>
+          <ul>
+            <li>使用函数指针</li>
+            <li>使用 std::function 和 lambda</li>
+            <li>需要显式定义函数签名</li>
+            <li>通常用于事件处理和异步I/O</li>
+          </ul>
+          <div class="code-block">
+            <span class="comment">// C++ 函数指针回调示例</span><br>
+            <span class="keyword">#include</span> &lt;iostream&gt;<br><br>
+
+            <span class="keyword">typedef</span> <span class="keyword">void</span> (*Callback)(<span
+              class="keyword">int</span>);<br><br>
+
+            <span class="keyword">void</span> process(<span class="keyword">int</span> value, Callback callback) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 处理数据</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span> result = value * <span class="number">2</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 调用回调</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;callback(result);<br>
+            }<br><br>
+
+            <span class="keyword">void</span> myCallback(<span class="keyword">int</span> result) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;std::cout << <span class="string">"Result: "</span>
+              << result;<br>
+                }<br><br>
+
+                <span class="keyword">int</span> main() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;process(<span class="number">5</span>, myCallback);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="number">0</span>;<br>
+                }
+          </div>
+        </div>
+
+        <div class="comparison-card">
+          <h3>JavaScript 中的回调</h3>
+          <ul>
+            <li>函数是一等公民</li>
+            <li>可以使用匿名函数</li>
+            <li>更灵活的函数传递</li>
+            <li>闭包自动捕获上下文</li>
+          </ul>
+          <div class="code-block">
+            <span class="comment">// JavaScript 回调示例</span><br>
+            <span class="keyword">function</span> <span class="function">process</span>(value, callback) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> result = value * <span
+              class="number">2</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">callback</span>(result);<br>
+            }<br><br>
+
+            <span class="comment">// 使用命名函数</span><br>
+            <span class="function">process</span>(<span class="number">5</span>, <span
+              class="function">logResult</span>);<br><br>
+
+            <span class="keyword">function</span> <span class="function">logResult</span>(result) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="function">log</span>(<span class="string">"结果:"</span>,
+            result);<br>
+            }<br><br>
+
+            <span class="comment">// 使用匿名函数</span><br>
+            <span class="function">process</span>(<span class="number">10</span>, <span
+              class="keyword">function</span>(res) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.<span class="function">log</span>(<span class="string">"匿名结果:"</span>,
+            res);<br>
+            });<br><br>
+
+            <span class="comment">// 使用箭头函数</span><br>
+            <span class="function">process</span>(<span class="number">15</span>, res => console.<span
+              class="function">log</span>(<span class="string">`箭头结果: ${res}`</span>));
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-area">
+      <h2>回调函数实践</h2>
+      <div>
+        <button onclick="testSyncCallback()">测试同步回调</button>
+        <button onclick="testAsyncCallback()">测试异步回调</button>
+        <button onclick="testCallbackChain()">测试回调链</button>
+      </div>
+
+      <div class="output" id="output">
+        // 输出将显示在这里
+      </div>
+    </div>
+
+    <footer>
+      <p>回调函数详解 | C++开发者视角 | JavaScript函数式编程基础</p>
+    </footer>
+  </div>
+
+  <script>
+    // 获取输出元素
+    const outputElement = document.getElementById('output');
+
+    // 清空输出
+    function clearOutput() {
+      outputElement.innerHTML = '';
+    }
+
+    // 添加输出内容
+    function addOutput(text) {
+      outputElement.innerHTML += text + '<br>';
+    }
+
+    // 同步回调测试
+    function testSyncCallback() {
+      clearOutput();
+      addOutput('=== 同步回调测试开始 ===');
+
+      // 定义处理函数
+      function processArray(arr, callback) {
+        addOutput('处理数组中...');
+        for (let i = 0; i < arr.length; i++) {
+          callback(arr[i]);
+        }
+        addOutput('数组处理完成');
+      }
+
+      // 定义回调
+      function logItem(item) {
+        addOutput(`处理元素: ${item} → ${item * 2}`);
+      }
+
+      // 使用回调
+      const numbers = [1, 2, 3, 4, 5];
+      processArray(numbers, logItem);
+
+      addOutput('=== 同步回调测试结束 ===');
+    }
+
+    // 异步回调测试
+    function testAsyncCallback() {
+      clearOutput();
+      addOutput('=== 异步回调测试开始 ===');
+      addOutput('启动数据获取...');
+
+      // 模拟异步数据获取
+      function fetchUserData(userId, callback) {
+        addOutput(`请求用户ID ${userId} 的数据...`);
+
+        // 模拟网络延迟
+        setTimeout(() => {
+          const users = {
+            1: { name: 'Alice', email: 'alice@example.com' },
+            2: { name: 'Bob', email: 'bob@example.com' },
+            3: { name: 'Charlie', email: 'charlie@example.com' }
+          };
+
+          const user = users[userId];
+          if (user) {
+            addOutput(`找到用户 ${userId} 的数据`);
+            callback(null, user); // 第一个参数为错误对象
+          } else {
+            addOutput(`用户 ${userId} 不存在`);
+            callback('用户未找到', null);
+          }
+        }, 2000);
+      }
+
+      // 使用回调处理结果
+      fetchUserData(2, (error, user) => {
+        if (error) {
+          addOutput(`错误: ${error}`);
+        } else {
+          addOutput(`收到用户数据: ${user.name} (${user.email})`);
+        }
+        addOutput('=== 异步回调测试结束 ===');
+      });
+
+      addOutput('数据请求已发送，等待响应...');
+    }
+
+    // 回调链测试
+    function testCallbackChain() {
+      clearOutput();
+      addOutput('=== 回调链测试开始 ===');
+
+      // 模拟异步操作1
+      function step1(callback) {
+        addOutput('步骤1: 开始');
+        setTimeout(() => {
+          addOutput('步骤1: 完成');
+          callback(10);
+        }, 1000);
+      }
+
+      // 模拟异步操作2
+      function step2(data, callback) {
+        addOutput(`步骤2: 开始 (使用数据: ${data})`);
+        setTimeout(() => {
+          const result = data * 2;
+          addOutput(`步骤2: 完成 → ${result}`);
+          callback(null, result);
+        }, 1500);
+      }
+
+      // 模拟异步操作3
+      function step3(data, callback) {
+        addOutput(`步骤3: 开始 (使用数据: ${data})`);
+        setTimeout(() => {
+          const result = data + 5;
+          addOutput(`步骤3: 完成 → ${result}`);
+          callback(null, result);
+        }, 1200);
+      }
+
+      // 启动回调链
+      addOutput('启动操作链...');
+      step1((result1) => {
+        step2(result1, (error, result2) => {
+          if (error) {
+            addOutput(`错误: ${error}`);
+            return;
+          }
+
+          step3(result2, (error, finalResult) => {
+            if (error) {
+              addOutput(`错误: ${error}`);
+            } else {
+              addOutput(`最终结果: ${finalResult}`);
+              addOutput('=== 回调链测试结束 ===');
+            }
+          });
+        });
+      });
+    }
+
+    // 初始化页面时运行一个示例
+    window.onload = testSyncCallback;
+  </script>
+</body>
+
+</html>

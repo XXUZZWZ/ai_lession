@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // 变量提升示例
+    console.log(a); // undefined
+    var a = 1;
+
+    // 全局绑定陷阱
+    var name = "全局变量";
+    function showName() {
+      console.log(name);
+      var name = "局部变量";
+    }
+    /*
+    等价于
+    function showName() {
+      var name;
+      console.log(name);
+      // 输出undefined
+      name = "局部变量";
+    }
+    */
+    showName(); // 输出undefined（变量提升导致局部name覆盖全局）
+  </script>
+</body>
+
+</html>

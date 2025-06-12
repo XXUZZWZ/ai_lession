@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    //"use strict"
+    const x = 111;
+    const y = 222;
+
+    var name = "XXXX"
+    function func() {
+      console.log(this)
+
+      console.log(this.name);
+    }
+    func();
+    //this  指向 执行的对象
+    // 这里函数是普通对象
+    // 等价于执行 window.func()
+    // 所以this和window绑定
+  </script>
+</body>
+
+</html>

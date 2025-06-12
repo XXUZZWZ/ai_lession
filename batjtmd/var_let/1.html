@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    "use strict"
+    const x = 111;
+    const y = 222;
+    /*
+    
+脚本
+x
+: 
+<值不可用>
+y
+: 
+<值不可用>
+Window
+全局
+    */
+    var name = "XXXX"
+    function func() {
+      console.log(this)
+      // undefined 严格模式下不和this 不和 window 绑定了
+      console.log(this.name);
+    }
+    func();
+    // 这里是严格模式，等价于undefined.func(),是函数运行后的 函数指针对象
+    // Uncaught TypeError: Cannot read properties of undefined (reading 'name')
+    // 严格模式下var 变量不会和window对象绑定
+  </script>
+</body>
+
+</html>

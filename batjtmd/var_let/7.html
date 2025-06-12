@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>箭头函数中的this</title>
+</head>
+
+<body>
+  <script>
+    var name = "windowsName";
+    var a = {
+      name: "Tom",
+      func1: function () {
+        console.log(this.name);
+      },
+      func2: function () {
+        setTimeout(() => {
+          // 箭头函数没有this ,
+          this.func1();
+        }, 1000)
+      },
+      func3: function () {
+        setTimeout(function () {
+          // 当定时器结束时，作为普通函数执行，直接报错 window里没有undfined
+          this.func1();
+        }, 2000)
+      },
+
+    }
+    a.func2();
+    a.func3();
+    // Uncaught TypeError: this.func1 is not a function
+  </script>
+</body>
+
+</html>

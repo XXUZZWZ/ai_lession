@@ -1,356 +1,450 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>智慧语录 - 抖音风格卡片</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap"
-    rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      touch-action: pan-y;
-    }
-
-    body {
-      font-family: 'Noto Serif SC', serif;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      color: #fff;
-      overflow: hidden;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 400px;
-      height: 95vh;
-      position: relative;
-      overflow: hidden;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    }
-
-    .card {
-      position: absolute;
-      width: 90%;
-      height: 85%;
-      left: 5%;
-      top: 7%;
-      border-radius: 25px;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      transition: transform 0.5s ease, opacity 0.3s ease;
-      overflow: hidden;
-      backface-visibility: hidden;
-    }
-
-    .quote {
-      font-size: 24px;
-      line-height: 1.6;
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
-
-    .author {
-      font-size: 18px;
-      font-style: italic;
-      align-self: flex-end;
-      margin-top: 20px;
-    }
-
-    .card-footer {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      padding: 0 20px;
-    }
-
-    .action-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .action-btn:hover {
-      transform: scale(1.1);
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    /* 讽刺生活卡片样式 */
-    .sarcastic {
-      background: linear-gradient(135deg, #2c3e50, #4a235a);
-      border: 2px solid #e74c3c;
-      font-family: 'ZCOOL XiaoWei', serif;
-    }
-
-    .sarcastic .quote {
-      color: #f39c12;
-      text-shadow: 0 0 5px rgba(243, 156, 18, 0.5);
-    }
-
-    .sarcastic .author {
-      color: #e74c3c;
-    }
-
-    /* 积极向上卡片样式 */
-    .positive {
-      background: linear-gradient(135deg, #43cea2, #185a9d);
-      border: 2px solid #2ecc71;
-      font-family: 'Ma Shan Zheng', cursive;
-    }
-
-    .positive .quote {
-      color: #f1f2f6;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-    }
-
-    .positive .author {
-      color: #f6e58d;
-    }
-
-    /* 充满智慧卡片样式 */
-    .wise {
-      background: linear-gradient(135deg, #8e9eab, #eef2f3);
-      border: 2px solid #5d4037;
-      font-family: 'Noto Serif SC', serif;
-    }
-
-    .wise .quote {
-      color: #3d3d3d;
-      font-weight: 700;
-    }
-
-    .wise .author {
-      color: #5d4037;
-    }
-
-    .wise::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="none" stroke="rgba(93,64,55,0.1)" stroke-width="1"/></svg>');
-      opacity: 0.3;
-    }
-
-    .card-indicator {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-    }
-
-    .indicator-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.4);
-    }
-
-    .indicator-dot.active {
-      background: #fff;
-      transform: scale(1.2);
-    }
-
-    .card-type {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(5px);
-    }
-
-    .sarcastic .card-type {
-      background: rgba(231, 76, 60, 0.3);
-      color: #f1c40f;
-    }
-
-    .positive .card-type {
-      background: rgba(46, 204, 113, 0.3);
-      color: #f6e58d;
-    }
-
-    .wise .card-type {
-      background: rgba(93, 64, 55, 0.3);
-      color: #5d4037;
-    }
-
-    .footer {
-      position: fixed;
-      bottom: 10px;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 14px;
-      text-align: center;
-      width: 100%;
-      padding: 10px;
-    }
-
-    .app-name {
-      position: fixed;
-      top: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      background: linear-gradient(45deg, #ff9966, #ff5e62);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-family: 'Ma Shan Zheng', cursive;
-      z-index: 1;
-    }
-
-    /* 动画效果 */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .card.active {
-      animation: fadeIn 0.5s ease forwards;
-      z-index: 2;
-    }
-
-    /* 响应式设计 */
-    @media (max-width: 500px) {
-      .container {
-        height: 90vh;
-      }
-
-      .card {
-        height: 80%;
-      }
-
-      .quote {
-        font-size: 22px;
-      }
-
-      .app-name {
-        top: 15px;
-        font-size: 22px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>智慧语录 - 抖音风格卡片</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: pan-y;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            height: 95vh;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card {
+            position: absolute;
+            width: 90%;
+            height: 85%;
+            left: 5%;
+            top: 7%;
+            border-radius: 25px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s ease, opacity 0.3s ease;
+            overflow: hidden;
+            backface-visibility: hidden;
+            cursor: pointer;
+        }
+        
+        .quote {
+            font-size: 24px;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .author {
+            font-size: 18px;
+            font-style: italic;
+            align-self: flex-end;
+            margin-top: 20px;
+        }
+        
+        .card-footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 20px;
+        }
+        
+        .action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 讽刺生活卡片样式 */
+        .sarcastic {
+            background: linear-gradient(135deg, #2c3e50, #4a235a);
+            border: 2px solid #e74c3c;
+            font-family: 'ZCOOL XiaoWei', serif;
+        }
+        
+        .sarcastic .quote {
+            color: #f39c12;
+            text-shadow: 0 0 5px rgba(243, 156, 18, 0.5);
+        }
+        
+        .sarcastic .author {
+            color: #e74c3c;
+        }
+        
+        /* 积极向上卡片样式 */
+        .positive {
+            background: linear-gradient(135deg, #43cea2, #185a9d);
+            border: 2px solid #2ecc71;
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+        
+        .positive .quote {
+            color: #f1f2f6;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+        
+        .positive .author {
+            color: #f6e58d;
+        }
+        
+        /* 充满智慧卡片样式 */
+        .wise {
+            background: linear-gradient(135deg, #8e9eab, #eef2f3);
+            border: 2px solid #5d4037;
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .wise .quote {
+            color: #3d3d3d;
+            font-weight: 700;
+        }
+        
+        .wise .author {
+            color: #5d4037;
+        }
+        
+        .wise::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="none" stroke="rgba(93,64,55,0.1)" stroke-width="1"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .card-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 5;
+        }
+        
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .indicator-dot.active {
+            background: #fff;
+            transform: scale(1.2);
+        }
+        
+        .card-type {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            z-index: 5;
+        }
+        
+        .sarcastic .card-type {
+            background: rgba(231, 76, 60, 0.3);
+            color: #f1c40f;
+        }
+        
+        .positive .card-type {
+            background: rgba(46, 204, 113, 0.3);
+            color: #f6e58d;
+        }
+        
+        .wise .card-type {
+            background: rgba(93, 64, 55, 0.3);
+            color: #5d4037;
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+        }
+        
+        .app-name {
+            position: fixed;
+            top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff9966, #ff5e62);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Ma Shan Zheng', cursive;
+            z-index: 1;
+        }
+        
+        .control-hint {
+            position: fixed;
+            top: 60px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            width: 100%;
+            padding: 5px;
+            z-index: 1;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .card.active {
+            animation: fadeIn 0.5s ease forwards;
+            z-index: 2;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .new-card {
+            animation: slideUp 0.5s ease forwards;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 500px) {
+            .container {
+                height: 90vh;
+            }
+            
+            .card {
+                height: 80%;
+            }
+            
+            .quote {
+                font-size: 22px;
+            }
+            
+            .app-name {
+                top: 15px;
+                font-size: 22px;
+            }
+            
+            .control-hint {
+                top: 50px;
+                font-size: 13px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <div class="app-name">智慧语录</div>
+    <div class="app-name">智慧语录</div>
+    <div class="control-hint">点击卡片或使用键盘 ↑↓ 键切换 | 滑动切换卡片</div>
+    
+    <div class="container" id="cardContainer">
+        <!-- 卡片将由JavaScript动态生成 -->
+    </div>
+    
+    <div class="footer">
+        共 <span id="quoteCount">0</span> 条语录 | 当前第 <span id="currentIndex">1</span> 条
+    </div>
 
-  <div class="container" id="cardContainer">
-    <!-- 卡片将由JavaScript动态生成 -->
-  </div>
-
-  <div class="footer">
-    滑动切换卡片 | 上滑收藏 | 下滑跳过
-  </div>
-
-  <script>
-    // 语录数据
-    const quotes = [
-      {
-        text: "生活就像骑自行车，要想保持平衡，就得不断前进。只是有时候，你会发现自己在原地打转。",
-        author: "爱因斯坦（改编）",
-        type: "sarcastic",
-        typeText: "讽刺生活"
-      },
-      {
-        text: "所谓成熟，就是在听到'波涛汹涌'四个字时，再也联想不到大海了。",
-        author: "成年人的觉悟",
-        type: "sarcastic",
-        typeText: "讽刺生活"
-      },
-      {
-        text: "每天告诉自己一次：'我真的很不错！' 但如果每天说三次，可能会被送进精神病院。",
-        author: "积极心理学（讽刺版）",
-        type: "sarcastic",
-        typeText: "讽刺生活"
-      },
-      {
-        text: "不要等待机会，而要创造机会。即使创造的机会失败了，至少你努力过。",
-        author: "积极思维",
-        type: "positive",
-        typeText: "积极向上"
-      },
-      {
-        text: "每一个不曾起舞的日子，都是对生命的辜负。所以，今天你跳舞了吗？",
-        author: "尼采",
-        type: "positive",
-        typeText: "积极向上"
-      },
-      {
-        text: "阳光总在风雨后，请相信有彩虹。即使没有彩虹，至少雨停了。",
-        author: "乐观主义者",
-        type: "positive",
-        typeText: "积极向上"
-      },
-      {
-        text: "知人者智，自知者明。胜人者有力，自胜者强。",
-        author: "老子",
-        type: "wise",
-        typeText: "充满智慧"
-      },
-      {
-        text: "三人行，必有我师焉。择其善者而从之，其不善者而改之。",
-        author: "孔子",
-        type: "wise",
-        typeText: "充满智慧"
-      },
-      {
-        text: "天地不仁，以万物为刍狗；圣人不仁，以百姓为刍狗。",
-        author: "老子",
-        type: "wise",
-        typeText: "充满智慧"
-      }
-    ];
-
-    // 初始化卡片
-    const cardContainer = document.getElementById('cardContainer');
-    let currentIndex = 0;
-    let startY = 0;
-    let isDragging = false;
-
-    function createCards() {
-      quotes.forEach((quote, index) => {
-        const card = document.createElement('div');
-        card.className = `card ${quote.type} ${index === 0 ? 'active' : ''}`;
-        card.innerHTML = `
+    <script>
+        // 扩展的语录数据（包含更多原创语录）
+        const quotes = [
+            {
+                text: "生活就像骑自行车，要想保持平衡，就得不断前进。只是有时候，你会发现自己在原地打转。",
+                author: "爱因斯坦（改编）",
+                type: "sarcastic",
+                typeText: "讽刺生活"
+            },
+            {
+                text: "所谓成长，就是在听到'波涛汹涌'四个字时，再也联想不到大海了。",
+                author: "成年人的觉悟",
+                type: "sarcastic",
+                typeText: "讽刺生活"
+            },
+            {
+                text: "每天告诉自己一次：'我真的很不错！' 但如果每天说三次，可能会被送进精神病院。",
+                author: "积极心理学（讽刺版）",
+                type: "sarcastic",
+                typeText: "讽刺生活"
+            },
+            {
+                text: "成年人的崩溃往往只在一瞬间，但修复它可能需要一生的时间。",
+                author: "现实主义者",
+                type: "sarcastic",
+                typeText: "讽刺生活"
+            },
+            {
+                text: "不要等待机会，而要创造机会。即使创造的机会失败了，至少你努力过。",
+                author: "积极思维",
+                type: "positive",
+                typeText: "积极向上"
+            },
+            {
+                text: "每一个不曾起舞的日子，都是对生命的辜负。所以，今天你跳舞了吗？",
+                author: "尼采",
+                type: "positive",
+                typeText: "积极向上"
+            },
+            {
+                text: "阳光总在风雨后，请相信有彩虹。即使没有彩虹，至少雨停了。",
+                author: "乐观主义者",
+                type: "positive",
+                typeText: "积极向上"
+            },
+            {
+                text: "人生就像一杯茶，不会苦一辈子，但总会苦一阵子。苦后的回甘，才是真正的滋味。",
+                author: "茶道人生",
+                type: "positive",
+                typeText: "积极向上"
+            },
+            {
+                text: "知人者智，自知者明。胜人者有力，自胜者强。",
+                author: "老子",
+                type: "wise",
+                typeText: "充满智慧"
+            },
+            {
+                text: "三人行，必有我师焉。择其善者而从之，其不善者而改之。",
+                author: "孔子",
+                type: "wise",
+                typeText: "充满智慧"
+            },
+            {
+                text: "天地不仁，以万物为刍狗；圣人不仁，以百姓为刍狗。",
+                author: "老子",
+                type: "wise",
+                typeText: "充满智慧"
+            },
+            {
+                text: "真正的智慧不在于知道多少，而在于知道自己不知道多少。",
+                author: "苏格拉底",
+                type: "wise",
+                typeText: "充满智慧"
+            },
+            {
+                text: "时间是最好的老师，可惜它最终会杀死所有的学生。",
+                author: "哲学家",
+                type: "sarcastic",
+                typeText: "讽刺生活"
+            },
+            {
+                text: "所谓爱情，就是两个人互相觉得对方是傻子，但又舍不得离开。",
+                author: "情感专家",
+                type: "sarcastic",
+                typeText: "讽刺生活"
+            },
+            {
+                text: "失败并不可怕，可怕的是你还相信这句话。",
+                author: "现实主义者",
+                type: "sarcastic",
+                typeText: "讽刺生活"
+            },
+            {
+                text: "山重水复疑无路，柳暗花明又一村。只要坚持走下去，总会遇见意想不到的风景。",
+                author: "陆游",
+                type: "positive",
+                typeText: "积极向上"
+            },
+            {
+                text: "世界上最美好的事情，莫过于看到一个人的笑容，尤其是因为你的存在而绽放的笑容。",
+                author: "温暖语录",
+                type: "positive",
+                typeText: "积极向上"
+            },
+            {
+                text: "滴水穿石，不是力量大，而是功夫深。日积月累的努力，终将改变一切。",
+                author: "坚持的力量",
+                type: "positive",
+                typeText: "积极向上"
+            },
+            {
+                text: "上善若水，水善利万物而不争。处众人之所恶，故几于道。",
+                author: "老子",
+                type: "wise",
+                typeText: "充满智慧"
+            },
+            {
+                text: "知之为知之，不知为不知，是知也。承认无知，才是求知的开始。",
+                author: "孔子",
+                type: "wise",
+                typeText: "充满智慧"
+            }
+        ];
+        
+        // 初始化卡片
+        const cardContainer = document.getElementById('cardContainer');
+        const quoteCountElement = document.getElementById('quoteCount');
+        const currentIndexElement = document.getElementById('currentIndex');
+        let currentIndex = 0;
+        let startY = 0;
+        let isDragging = false;
+        
+        // 更新计数显示
+        function updateCounters() {
+            quoteCountElement.textContent = quotes.length;
+            currentIndexElement.textContent = currentIndex + 1;
+        }
+        
+        function createCards() {
+            quotes.forEach((quote, index) => {
+                const card = document.createElement('div');
+                card.className = `card ${quote.type} ${index === 0 ? 'active' : ''}`;
+                card.innerHTML = `
                     <div class="card-type">${quote.typeText}</div>
                     <div class="quote">"${quote.text}"</div>
                     <div class="author">—— ${quote.author}</div>
@@ -360,179 +454,212 @@
                         <div class="action-btn"><i class="fas fa-share-alt"></i></div>
                     </div>
                 `;
-        card.dataset.index = index;
-        card.style.transform = `translateY(${index * 20}px) scale(${1 - index * 0.05})`;
-        card.style.zIndex = quotes.length - index;
-        card.style.opacity = 1 - index * 0.3;
-        cardContainer.appendChild(card);
-      });
-
-      createIndicator();
-    }
-
-    function createIndicator() {
-      const indicator = document.createElement('div');
-      indicator.className = 'card-indicator';
-
-      quotes.forEach((_, index) => {
-        const dot = document.createElement('div');
-        dot.className = `indicator-dot ${index === 0 ? 'active' : ''}`;
-        dot.dataset.index = index;
-        indicator.appendChild(dot);
-      });
-
-      cardContainer.appendChild(indicator);
-    }
-
-    function updateIndicator(index) {
-      document.querySelectorAll('.indicator-dot').forEach(dot => {
-        dot.classList.remove('active');
-        if (parseInt(dot.dataset.index) === index) {
-          dot.classList.add('active');
+                card.dataset.index = index;
+                card.style.transform = `translateY(${index * 20}px) scale(${1 - index * 0.05})`;
+                card.style.zIndex = quotes.length - index;
+                card.style.opacity = 1 - index * 0.3;
+                cardContainer.appendChild(card);
+                
+                // 添加点击事件
+                card.addEventListener('click', () => {
+                    nextCard();
+                });
+            });
+            
+            createIndicator();
+            updateCounters();
         }
-      });
-    }
-
-    function showCard(index) {
-      const cards = document.querySelectorAll('.card');
-      cards.forEach((card, i) => {
-        const cardIndex = parseInt(card.dataset.index);
-        const diff = cardIndex - index;
-
-        if (diff < 0) {
-          // 已经滑过的卡片
-          card.style.transform = `translateY(-100vh) scale(0.8)`;
-          card.style.opacity = '0';
-          card.classList.remove('active');
-        } else if (diff === 0) {
-          // 当前卡片
-          card.style.transform = `translateY(0) scale(1)`;
-          card.style.opacity = '1';
-          card.classList.add('active');
-        } else {
-          // 后续卡片
-          card.style.transform = `translateY(${diff * 20}px) scale(${1 - diff * 0.05})`;
-          card.style.opacity = 1 - diff * 0.3;
-          card.classList.remove('active');
+        
+        function createIndicator() {
+            const indicator = document.createElement('div');
+            indicator.className = 'card-indicator';
+            
+            quotes.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = `indicator-dot ${index === 0 ? 'active' : ''}`;
+                dot.dataset.index = index;
+                indicator.appendChild(dot);
+            });
+            
+            cardContainer.appendChild(indicator);
         }
-      });
-
-      currentIndex = index;
-      updateIndicator(index);
-    }
-
-    function nextCard() {
-      if (currentIndex < quotes.length - 1) {
-        showCard(currentIndex + 1);
-      }
-    }
-
-    function prevCard() {
-      if (currentIndex > 0) {
-        showCard(currentIndex - 1);
-      }
-    }
-
-    // 触摸事件处理
-    cardContainer.addEventListener('touchstart', e => {
-      startY = e.touches[0].clientY;
-      isDragging = true;
-    });
-
-    cardContainer.addEventListener('touchmove', e => {
-      if (!isDragging) return;
-      e.preventDefault();
-
-      const currentY = e.touches[0].clientY;
-      const diffY = currentY - startY;
-
-      // 移动当前卡片
-      const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
-      currentCard.style.transform = `translateY(${diffY}px)`;
-      currentCard.style.opacity = `${1 - Math.abs(diffY) / 300}`;
-    });
-
-    cardContainer.addEventListener('touchend', e => {
-      if (!isDragging) return;
-      isDragging = false;
-
-      const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
-      const diffY = e.changedTouches[0].clientY - startY;
-
-      // 复位动画
-      currentCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-      currentCard.style.transform = 'translateY(0)';
-      currentCard.style.opacity = '1';
-
-      // 滑动阈值判断
-      if (diffY > 100 && currentIndex > 0) {
-        prevCard();
-      } else if (diffY < -100 && currentIndex < quotes.length - 1) {
-        nextCard();
-      }
-
-      // 移除过渡效果，为下一次拖动准备
-      setTimeout(() => {
-        currentCard.style.transition = '';
-      }, 300);
-    });
-
-    // 鼠标事件处理（桌面支持）
-    cardContainer.addEventListener('mousedown', e => {
-      startY = e.clientY;
-      isDragging = true;
-      e.preventDefault();
-    });
-
-    document.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-
-      const currentY = e.clientY;
-      const diffY = currentY - startY;
-
-      // 移动当前卡片
-      const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
-      currentCard.style.transform = `translateY(${diffY}px)`;
-      currentCard.style.opacity = `${1 - Math.abs(diffY) / 300}`;
-    });
-
-    document.addEventListener('mouseup', e => {
-      if (!isDragging) return;
-      isDragging = false;
-
-      const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
-      const diffY = e.clientY - startY;
-
-      // 复位动画
-      currentCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-      currentCard.style.transform = 'translateY(0)';
-      currentCard.style.opacity = '1';
-
-      // 滑动阈值判断
-      if (diffY > 100 && currentIndex > 0) {
-        prevCard();
-      } else if (diffY < -100 && currentIndex < quotes.length - 1) {
-        nextCard();
-      }
-
-      // 移除过渡效果，为下一次拖动准备
-      setTimeout(() => {
-        currentCard.style.transition = '';
-      }, 300);
-    });
-
-    // 初始化
-    createCards();
-
-    // 添加键盘支持（用于桌面测试）
-    document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowUp') {
-        prevCard();
-      } else if (e.key === 'ArrowDown') {
-        nextCard();
-      }
-    });
-  </script>
+        
+        function updateIndicator(index) {
+            document.querySelectorAll('.indicator-dot').forEach(dot => {
+                dot.classList.remove('active');
+                if(parseInt(dot.dataset.index) === index) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+        
+        function showCard(index) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, i) => {
+                const cardIndex = parseInt(card.dataset.index);
+                const diff = cardIndex - index;
+                
+                if (diff < 0) {
+                    // 已经滑过的卡片
+                    card.style.transform = `translateY(-100vh) scale(0.8)`;
+                    card.style.opacity = '0';
+                    card.classList.remove('active');
+                } else if (diff === 0) {
+                    // 当前卡片
+                    card.style.transform = `translateY(0) scale(1)`;
+                    card.style.opacity = '1';
+                    card.classList.add('active');
+                    card.classList.add('new-card');
+                    setTimeout(() => {
+                        card.classList.remove('new-card');
+                    }, 500);
+                } else {
+                    // 后续卡片
+                    card.style.transform = `translateY(${diff * 20}px) scale(${1 - diff * 0.05})`;
+                    card.style.opacity = 1 - diff * 0.3;
+                    card.classList.remove('active');
+                }
+            });
+            
+            currentIndex = index;
+            updateIndicator(index);
+            updateCounters();
+        }
+        
+        function nextCard() {
+            if (currentIndex < quotes.length - 1) {
+                showCard(currentIndex + 1);
+            } else {
+                // 循环到第一张
+                showCard(0);
+            }
+        }
+        
+        function prevCard() {
+            if (currentIndex > 0) {
+                showCard(currentIndex - 1);
+            } else {
+                // 循环到最后一张
+                showCard(quotes.length - 1);
+            }
+        }
+        
+        // 触摸事件处理
+        cardContainer.addEventListener('touchstart', e => {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+        });
+        
+        cardContainer.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const currentY = e.touches[0].clientY;
+            const diffY = currentY - startY;
+            
+            // 移动当前卡片
+            const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
+            currentCard.style.transform = `translateY(${diffY}px)`;
+            currentCard.style.opacity = `${1 - Math.abs(diffY) / 300}`;
+        });
+        
+        cardContainer.addEventListener('touchend', e => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
+            const diffY = e.changedTouches[0].clientY - startY;
+            
+            // 复位动画
+            currentCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            currentCard.style.transform = 'translateY(0)';
+            currentCard.style.opacity = '1';
+            
+            // 滑动阈值判断
+            if (diffY > 100) {
+                prevCard();
+            } else if (diffY < -100) {
+                nextCard();
+            }
+            
+            // 移除过渡效果，为下一次拖动准备
+            setTimeout(() => {
+                currentCard.style.transition = '';
+            }, 300);
+        });
+        
+        // 鼠标事件处理（桌面支持）
+        cardContainer.addEventListener('mousedown', e => {
+            startY = e.clientY;
+            isDragging = true;
+            e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            
+            const currentY = e.clientY;
+            const diffY = currentY - startY;
+            
+            // 移动当前卡片
+            const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
+            currentCard.style.transform = `translateY(${diffY}px)`;
+            currentCard.style.opacity = `${1 - Math.abs(diffY) / 300}`;
+        });
+        
+        document.addEventListener('mouseup', e => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
+            const diffY = e.clientY - startY;
+            
+            // 复位动画
+            currentCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            currentCard.style.transform = 'translateY(0)';
+            currentCard.style.opacity = '1';
+            
+            // 滑动阈值判断
+            if (diffY > 100) {
+                prevCard();
+            } else if (diffY < -100) {
+                nextCard();
+            }
+            
+            // 移除过渡效果，为下一次拖动准备
+            setTimeout(() => {
+                currentCard.style.transition = '';
+            }, 300);
+        });
+        
+        // 初始化
+        createCards();
+        
+        // 添加键盘支持
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowUp') {
+                prevCard();
+            } else if (e.key === 'ArrowDown') {
+                nextCard();
+            }
+        });
+        
+        // 添加按钮事件
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 防止触发卡片点击事件
+                this.classList.toggle('active');
+                
+                if (this.querySelector('.fa-heart')) {
+                    this.classList.toggle('liked');
+                    if (this.classList.contains('liked')) {
+                        this.innerHTML = '<i class="fas fa-heart" style="color:#e74c3c"></i>';
+                    } else {
+                        this.innerHTML = '<i class="fas fa-heart"></i>';
+                    }
+                }
+            });
+        });
+    </script>
 </body>
-
 </html>

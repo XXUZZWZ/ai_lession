@@ -1,0 +1,536 @@
+# 柯里化（Currying）渐进式实现指南
+
+我将展示四个逐步递进的柯里化实现版本，从最简单到功能最完整，帮助您深入理解柯里化的实现原理。
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>柯里化（Currying）渐进式实现</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      header {
+        text-align: center;
+        padding: 30px 0;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        font-size: 2.8rem;
+        margin-bottom: 15px;
+      }
+      .subtitle {
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        color: #f0f0f0;
+      }
+      .versions-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin-top: 20px;
+      }
+      .version-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        flex: 1;
+        min-width: 300px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .version-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+      }
+      .card-header {
+        background: #2c3e50;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+      .card-body {
+        padding: 25px;
+        height: 300px;
+        overflow-y: auto;
+      }
+      .card-footer {
+        padding: 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+      }
+      .code-block {
+        background: #2c3e50;
+        color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        margin: 15px 0;
+        line-height: 1.5;
+      }
+      .limitations {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 0 4px 4px 0;
+      }
+      .test-area {
+        background: #e9ecef;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 15px;
+      }
+      button {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+      }
+      button:hover {
+        background: #2980b9;
+      }
+      .result {
+        margin-top: 15px;
+        padding: 15px;
+        background: #d4edda;
+        border-radius: 6px;
+        color: #155724;
+        font-family: monospace;
+      }
+      .highlight {
+        background-color: #ffeb3b;
+        padding: 2px 5px;
+        border-radius: 3px;
+      }
+      h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 8px;
+      }
+      .pros-cons {
+        display: flex;
+        gap: 15px;
+        margin: 15px 0;
+      }
+      .pros,
+      .cons {
+        flex: 1;
+        padding: 15px;
+        border-radius: 8px;
+      }
+      .pros {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+      }
+      .cons {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+      }
+      .pros h4,
+      .cons h4 {
+        margin-bottom: 10px;
+        color: #155724;
+      }
+      .cons h4 {
+        color: #721c24;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      @media (max-width: 768px) {
+        .versions-container {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>柯里化（Currying）渐进式实现</h1>
+        <p class="subtitle">
+          从基础到高级的四个实现版本，逐步展示柯里化核心原理
+        </p>
+      </header>
+
+      <div class="versions-container">
+        <!-- 版本1：基础实现 -->
+        <div class="version-card">
+          <div class="card-header">
+            <h2>版本1：基础实现</h2>
+            <p>每次只接受一个参数</p>
+          </div>
+          <div class="card-body">
+            <h3>实现代码</h3>
+            <div class="code-block">
+              function curryV1(fn) { const collectedArgs = []; return function
+              curried(arg) { collectedArgs.push(arg); if (collectedArgs.length
+              === fn.length) { return fn(...collectedArgs); } else { return
+              curried; } }; }
+            </div>
+
+            <div class="pros-cons">
+              <div class="pros">
+                <h4>优点</h4>
+                <ul>
+                  <li>实现简单，易于理解</li>
+                  <li>使用闭包存储参数</li>
+                  <li>演示柯里化核心概念</li>
+                </ul>
+              </div>
+              <div class="cons">
+                <h4>缺点</h4>
+                <ul>
+                  <li>每次只能传入一个参数</li>
+                  <li>不支持多参数调用</li>
+                  <li>无法复用函数</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="test-area">
+              <button onclick="testV1()">测试版本1</button>
+              <div class="result" id="result-v1"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 版本2：支持多参数 -->
+        <div class="version-card">
+          <div class="card-header">
+            <h2>版本2：支持多参数</h2>
+            <p>允许单次调用传入多个参数</p>
+          </div>
+          <div class="card-body">
+            <h3>实现代码</h3>
+            <div class="code-block">
+              function curryV2(fn) { return function curried(...args) { if
+              (args.length >= fn.length) { return fn(...args); } else { return
+              function(...nextArgs) { return curried(...args, ...nextArgs); }; }
+              }; }
+            </div>
+
+            <div class="pros-cons">
+              <div class="pros">
+                <h4>优点</h4>
+                <ul>
+                  <li>支持单次调用传入多个参数</li>
+                  <li>更接近实际使用场景</li>
+                  <li>保留闭包存储特性</li>
+                </ul>
+              </div>
+              <div class="cons">
+                <h4>缺点</h4>
+                <ul>
+                  <li>不能复用部分应用的函数</li>
+                  <li>多次调用会创建新函数</li>
+                  <li>不支持占位符功能</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="test-area">
+              <button onclick="testV2()">测试版本2</button>
+              <div class="result" id="result-v2"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 版本3：支持部分应用 -->
+        <div class="version-card">
+          <div class="card-header">
+            <h2>版本3：支持部分应用</h2>
+            <p>可复用部分应用的函数</p>
+          </div>
+          <div class="card-body">
+            <h3>实现代码</h3>
+            <div class="code-block">
+              function curryV3(fn) { return function curried(...args) { if
+              (args.length >= fn.length) { return fn.apply(this, args); } const
+              storedArgs = args.slice(); return function(...nextArgs) { const
+              combinedArgs = storedArgs.concat(nextArgs); return
+              curried.apply(this, combinedArgs); }; }; }
+            </div>
+
+            <div class="pros-cons">
+              <div class="pros">
+                <h4>优点</h4>
+                <ul>
+                  <li>支持部分应用（创建新函数）</li>
+                  <li>复用部分参数</li>
+                  <li>更符合函数式编程思想</li>
+                </ul>
+              </div>
+              <div class="cons">
+                <h4>缺点</h4>
+                <ul>
+                  <li>实现复杂度增加</li>
+                  <li>需要复制参数数组</li>
+                  <li>仍不支持占位符</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="test-area">
+              <button onclick="testV3()">测试版本3</button>
+              <div class="result" id="result-v3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 版本4：完整实现 -->
+        <div class="version-card">
+          <div class="card-header">
+            <h2>版本4：完整实现</h2>
+            <p>支持占位符和任意调用方式</p>
+          </div>
+          <div class="card-body">
+            <h3>实现代码</h3>
+            <div class="code-block">
+              function curryV4(fn) { return function curried(...args) { //
+              检查参数是否足够且无占位符 const ready = args.length >= fn.length
+              && !args.includes(curryV4.placeholder); if (ready) return
+              fn.apply(this, args); return function(...nextArgs) { // 替换占位符
+              const mergedArgs = args.map(arg => arg === curryV4.placeholder &&
+              nextArgs.length ? nextArgs.shift() : arg ).concat(nextArgs);
+              return curried.apply(this, mergedArgs); }; }; }
+              curryV4.placeholder = Symbol('PLACEHOLDER');
+            </div>
+
+            <div class="pros-cons">
+              <div class="pros">
+                <h4>优点</h4>
+                <ul>
+                  <li>支持占位符功能</li>
+                  <li>任意调用顺序</li>
+                  <li>完整的柯里化功能</li>
+                </ul>
+              </div>
+              <div class="cons">
+                <h4>缺点</h4>
+                <ul>
+                  <li>实现复杂度高</li>
+                  <li>性能开销较大</li>
+                  <li>需要特殊占位符</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="test-area">
+              <button onclick="testV4()">测试版本4</button>
+              <div class="result" id="result-v4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 原始加法函数
+      function add(a, b, c) {
+        return a + b + c;
+      }
+
+      // 原始连接函数
+      function greet(greeting, name, punctuation) {
+        return `${greeting} ${name}${punctuation}`;
+      }
+
+      // 版本1：基础实现
+      function curryV1(fn) {
+        const collectedArgs = [];
+
+        return function curried(arg) {
+          collectedArgs.push(arg);
+
+          if (collectedArgs.length === fn.length) {
+            return fn(...collectedArgs);
+          } else {
+            return curried;
+          }
+        };
+      }
+
+      // 版本2：支持多参数
+      function curryV2(fn) {
+        return function curried(...args) {
+          if (args.length >= fn.length) {
+            return fn(...args);
+          } else {
+            return function (...nextArgs) {
+              return curried(...args, ...nextArgs);
+            };
+          }
+        };
+      }
+
+      // 版本3：支持部分应用
+      function curryV3(fn) {
+        return function curried(...args) {
+          if (args.length >= fn.length) {
+            return fn.apply(this, args);
+          }
+
+          const storedArgs = args.slice();
+          return function (...nextArgs) {
+            const combinedArgs = storedArgs.concat(nextArgs);
+            return curried.apply(this, combinedArgs);
+          };
+        };
+      }
+
+      // 版本4：完整实现（支持占位符）
+      function curryV4(fn) {
+        return function curried(...args) {
+          // 检查参数是否足够且无占位符
+          const ready =
+            args.length >= fn.length && !args.includes(curryV4.placeholder);
+
+          if (ready) return fn.apply(this, args);
+
+          return function (...nextArgs) {
+            // 替换占位符
+            const mergedArgs = args
+              .map((arg) =>
+                arg === curryV4.placeholder && nextArgs.length
+                  ? nextArgs.shift()
+                  : arg
+              )
+              .concat(nextArgs);
+
+            return curried.apply(this, mergedArgs);
+          };
+        };
+      }
+      curryV4.placeholder = Symbol("PLACEHOLDER");
+
+      // 测试函数
+      function testV1() {
+        const resultEl = document.getElementById("result-v1");
+        try {
+          const curriedAdd = curryV1(add);
+          const result = curriedAdd(1)(2)(3);
+          resultEl.innerHTML = `<strong>结果：</strong> ${result}<br>
+                                       <strong>调用：</strong> curriedAdd(1)(2)(3)`;
+        } catch (e) {
+          resultEl.innerHTML = `<strong>错误：</strong> ${e.message}`;
+        }
+      }
+
+      function testV2() {
+        const resultEl = document.getElementById("result-v2");
+        try {
+          const curriedAdd = curryV2(add);
+          const result = curriedAdd(1, 2)(3);
+          resultEl.innerHTML = `<strong>结果：</strong> ${result}<br>
+                                       <strong>调用：</strong> curriedAdd(1, 2)(3)`;
+        } catch (e) {
+          resultEl.innerHTML = `<strong>错误：</strong> ${e.message}`;
+        }
+      }
+
+      function testV3() {
+        const resultEl = document.getElementById("result-v3");
+        try {
+          const curriedAdd = curryV3(add);
+          const addFive = curriedAdd(2, 3);
+          const result = addFive(10);
+          resultEl.innerHTML = `<strong>结果：</strong> ${result}<br>
+                                      <strong>调用：</strong> const addFive = curriedAdd(2, 3); addFive(10);`;
+        } catch (e) {
+          resultEl.innerHTML = `<strong>错误：</strong> ${e.message}`;
+        }
+      }
+
+      function testV4() {
+        const resultEl = document.getElementById("result-v4");
+        try {
+          const _ = curryV4.placeholder;
+          const curriedGreet = curryV4(greet);
+          const greetJohn = curriedGreet(_, "John");
+          const result = greetJohn("Hello")("!");
+          resultEl.innerHTML = `<strong>结果：</strong> "${result}"<br>
+                                      <strong>调用：</strong> curriedGreet(_, 'John')('Hello')('!')`;
+        } catch (e) {
+          resultEl.innerHTML = `<strong>错误：</strong> ${e.message}`;
+        }
+      }
+    </script>
+  </body>
+</html>
+```
+
+## 柯里化实现演进说明
+
+### 版本 1：基础实现
+
+- **核心特点**：每次只接受一个参数
+- **实现方式**：使用闭包存储参数数组
+- **局限性**：只能逐个参数调用，不支持多参数传递
+
+### 版本 2：支持多参数
+
+- **核心特点**：允许单次调用传入多个参数
+- **实现方式**：使用剩余参数和递归
+- **优势**：支持`curried(1,2)(3)`的调用方式
+- **局限性**：不能复用部分应用的函数
+
+### 版本 3：支持部分应用
+
+- **核心特点**：可以创建部分应用的函数
+- **实现方式**：复制参数数组以支持复用
+- **优势**：支持`const addFive = curriedAdd(2,3); addFive(1);`的用法
+- **局限性**：参数顺序固定，不支持灵活占位
+
+### 版本 4：完整实现
+
+- **核心特点**：支持占位符和任意调用顺序
+- **实现方式**：使用 Symbol 作为占位符，动态合并参数
+- **优势**：支持`curried(_, 'John')('Hello')('!')`的灵活调用
+- **应用场景**：需要高度灵活的参数传递时
+
+## 柯里化的实际应用场景
+
+1. **参数复用**：创建部分应用的函数
+2. **延迟执行**：在事件处理等场景中逐步提供参数
+3. **函数组合**：创建可组合的函数管道
+4. **动态生成函数**：根据部分参数生成特定功能的函数
+
+通过这四个渐进式的实现，可以清晰看到柯里化从基础概念到完整功能实现的演进过程，帮助深入理解函数式编程的核心思想。

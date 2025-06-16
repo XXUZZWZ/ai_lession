@@ -2,20 +2,98 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>随机美食推荐</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天吃点啥？| 美食推荐神器</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>今天吃点啥？</h1>
-        <button id="recommendBtn">点我推荐</button>
-        <div id="result" class="result-box">
-          <h1>我爱造饭</h1>
-          <h1>吃到就是win</h1>
+        <header class="app-header">
+            <h1><i class="fas fa-utensils"></i> 今天吃点啥？</h1>
+            <p class="tagline">告别选择困难症，美食灵感一点就来</p>
+            <button class="ai-btn" id="openAIChat">
+                <i class="fas fa-robot"></i> AI 助手
+            </button>
+        </header>
+        
+        <div class="main-content">
+            <div class="food-filters">
+                <div class="filter-title">筛选美食类型：</div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-type="all">全部</button>
+                    <button class="filter-btn" data-type="中式">中式</button>
+                    <button class="filter-btn" data-type="西式">西式</button>
+                    <button class="filter-btn" data-type="日式">日式</button>
+                    <button class="filter-btn" data-type="韩式">韩式</button>
+                    <button class="filter-btn" data-type="东南亚式">东南亚</button>
+                </div>
+            </div>
+            
+            <button id="recommendBtn" class="pulse-btn">给我推荐 <i class="fas fa-random"></i></button>
+            
+            <div id="result" class="result-box">
+                <div class="default-state">
+                    <i class="fas fa-hamburger food-icon"></i>
+                    <p>点击按钮，发现美食灵感</p>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="add-btn"><i class="fas fa-heart"></i> 添加到想吃清单</button>
+                <button class="share-btn"><i class="fas fa-share-alt"></i> 分享美食</button>
+            </div>
+            
+            <div class="wishlist-container">
+                <div class="wishlist-header">
+                    <h3><i class="fas fa-clipboard-list"></i> 我的想吃清单</h3>
+                    <button class="clear-all-btn"><i class="fas fa-trash"></i> 清空</button>
+                </div>
+                <div id="wishlist" class="wishlist-box"></div>
+            </div>
         </div>
-        <button class ="add-btn">添加到想吃清单</button>
-        <div id="wishlist" class="wishlist-box"></div>
+        
+        <footer class="app-footer">
+            <p>已收录 200+ 全球美食 · 持续更新中</p>
+            <p class="copyright">© 2023 今天吃点啥 - 美食推荐神器</p>
+            <p class="disclaimer">图片来源: <a href="https://www.freepik.com" target="_blank">Freepik</a> - 仅用于演示</p>
+        </footer>
     </div>
+
+    <!-- AI 助手对话框 -->
+    <div class="ai-chat-modal" id="aiChatModal">
+        <div class="ai-chat-container">
+            <div class="ai-chat-header">
+                <h3><i class="fas fa-robot"></i> 美食 AI 助手</h3>
+                <button class="close-modal-btn" id="closeAIChat">&times;</button>
+            </div>
+            <div class="ai-chat-body">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>你好！我是你的美食助手。可以告诉我你的口味偏好、食材限制或今天的心情吗？我会为你推荐合适的美食。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="userInput" placeholder="例如：我想吃辣的，但不要太油腻..." />
+                    <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                <div class="ai-suggestions">
+                    <p>快捷提问：</p>
+                    <div class="suggestion-chips">
+                        <button class="suggestion-chip">我今天想吃清淡的</button>
+                        <button class="suggestion-chip">推荐一道适合减肥的菜</button>
+                        <button class="suggestion-chip">我喜欢吃甜食，有推荐吗？</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="index.js"></script>
 </body>
 </html>

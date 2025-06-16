@@ -44,9 +44,10 @@ const header = {
   // 内容类型 
   'Content-Type':'application/json',
   // 你的API key 
-  Authorization:'Bearer sk-d3470aa5e908400f98dbf60a378f70cb'
+  Authorization:'Bearer sk-dd6b5670daca4dd7a548341c7f85d673'
   
 }
+
 // 设置请求体
 const payload = {
   model : 'deepseek-chat',

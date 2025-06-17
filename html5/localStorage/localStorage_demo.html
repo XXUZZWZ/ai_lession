@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>localStorage API 基本使用示例</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Microsoft YaHei', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .section {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      background-color: #f9f9f9;
+    }
+    
+    .section h2 {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    input, button {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #45a049;
+    }
+    
+    .output {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      min-height: 100px;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    
+    .storage-items {
+      list-style: none;
+    }
+    
+    .storage-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .storage-item:last-child {
+      border-bottom: none;
+    }
+    
+    .delete-btn {
+      background-color: #f44336;
+      padding: 2px 8px;
+      font-size: 12px;
+    }
+    
+    .delete-btn:hover {
+      background-color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <h1>localStorage API 基本使用示例</h1>
+  
+  <div class="container">
+    <!-- 存储数据部分 -->
+    <div class="section">
+      <h2>存储数据</h2>
+      <div class="controls">
+        <input type="text" id="keyInput" placeholder="键名">
+        <input type="text" id="valueInput" placeholder="值">
+        <button id="saveBtn">保存</button>
+      </div>
+      <p>提示：输入键名和值，然后点击"保存"按钮将数据存储到localStorage中。</p>
+    </div>
+    
+    <!-- 获取数据部分 -->
+    <div class="section">
+      <h2>获取数据</h2>
+      <div class="controls">
+        <input type="text" id="getKeyInput" placeholder="输入要获取的键名">
+        <button id="getBtn">获取</button>
+      </div>
+      <div class="output" id="getOutput">结果将显示在这里...</div>
+    </div>
+    
+    <!-- 删除数据部分 -->
+    <div class="section">
+      <h2>删除数据</h2>
+      <div class="controls">
+        <input type="text" id="removeKeyInput" placeholder="输入要删除的键名">
+        <button id="removeBtn">删除</button>
+        <button id="clearBtn">清空所有</button>
+      </div>
+      <p>提示：输入键名删除单个项目，或点击"清空所有"删除所有存储的数据。</p>
+    </div>
+    
+    <!-- 存储复杂数据部分 -->
+    <div class="section">
+      <h2>存储复杂数据(对象/数组)</h2>
+      <div class="controls">
+        <button id="saveObjBtn">存储示例对象</button>
+        <button id="getObjBtn">获取示例对象</button>
+      </div>
+      <div class="output" id="objOutput">结果将显示在这里...</div>
+    </div>
+    
+    <!-- 当前存储内容 -->
+    <div class="section">
+      <h2>当前localStorage内容</h2>
+      <button id="refreshBtn">刷新列表</button>
+      <ul class="storage-items" id="storageList"></ul>
+    </div>
+  </div>
+
+  <script>
+    // DOM元素
+    const keyInput = document.getElementById('keyInput');
+    const valueInput = document.getElementById('valueInput');
+    const saveBtn = document.getElementById('saveBtn');
+    const getKeyInput = document.getElementById('getKeyInput');
+    const getBtn = document.getElementById('getBtn');
+    const getOutput = document.getElementById('getOutput');
+    const removeKeyInput = document.getElementById('removeKeyInput');
+    const removeBtn = document.getElementById('removeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const saveObjBtn = document.getElementById('saveObjBtn');
+    const getObjBtn = document.getElementById('getObjBtn');
+    const objOutput = document.getElementById('objOutput');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const storageList = document.getElementById('storageList');
+
+    // 检查浏览器是否支持localStorage
+    function checkSupport() {
+      try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // 初始化
+    function init() {
+      if (!checkSupport()) {
+        alert('您的浏览器不支持localStorage！');
+        return;
+      }
+      
+      // 加载当前存储内容
+      updateStorageList();
+      
+      // 绑定事件
+      saveBtn.addEventListener('click', saveItem);
+      getBtn.addEventListener('click', getItem);
+      removeBtn.addEventListener('click', removeItem);
+      clearBtn.addEventListener('click', clearStorage);
+      saveObjBtn.addEventListener('click', saveObject);
+      getObjBtn.addEventListener('click', getObject);
+      refreshBtn.addEventListener('click', updateStorageList);
+    }
+
+    // 保存数据
+    function saveItem() {
+      const key = keyInput.value.trim();
+      const value = valueInput.value.trim();
+      
+      if (!key) {
+        alert('请输入键名！');
+        return;
+      }
+      
+      try {
+        localStorage.setItem(key, value);
+        alert(`数据已保存！键名: ${key}, 值: ${value}`);
+        keyInput.value = '';
+        valueInput.value = '';
+        updateStorageList();
+      } catch (e) {
+        alert('保存失败！' + e.message);
+      }
+    }
+
+    // 获取数据
+    function getItem() {
+      const key = getKeyInput.value.trim();
+      
+      if (!key) {
+        alert('请输入键名！');
+        return;
+      }
+      
+      const value = localStorage.getItem(key);
+      
+      if (value === null) {
+        getOutput.textContent = `未找到键名为 "${key}" 的数据`;
+      } else {
+        getOutput.textContent = `键名: ${key}\n值: ${value}`;
+      }
+    }
+
+    // 删除数据
+    function removeItem() {
+      const key = removeKeyInput.value.trim();
+      
+      if (!key) {
+        alert('请输入键名！');
+        return;
+      }
+      
+      localStorage.removeItem(key);
+      alert(`已删除键名为 "${key}" 的数据`);
+      removeKeyInput.value = '';
+      updateStorageList();
+    }
+
+    // 清空所有数据
+    function clearStorage() {
+      if (confirm('确定要清空所有存储的数据吗？')) {
+        localStorage.clear();
+        alert('已清空所有数据！');
+        updateStorageList();
+      }
+    }
+
+    // 存储示例对象
+    function saveObject() {
+      const exampleObj = {
+        name: '张三',
+        age: 28,
+        hobbies: ['阅读', '游泳', '编程'],
+        address: {
+          city: '上海',
+          district: '浦东新区'
+        }
+      };
+      
+      try {
+        localStorage.setItem('exampleObject', JSON.stringify(exampleObj));
+        objOutput.textContent = '示例对象已存储！';
+        updateStorageList();
+      } catch (e) {
+        alert('存储失败！' + e.message);
+      }
+    }
+
+    // 获取示例对象
+    function getObject() {
+      const objStr = localStorage.getItem('exampleObject');
+      
+      if (objStr === null) {
+        objOutput.textContent = '未找到示例对象，请先点击"存储示例对象"按钮';
+      } else {
+        try {
+          const obj = JSON.parse(objStr);
+          objOutput.textContent = `解析后的对象:\n${JSON.stringify(obj, null, 2)}`;
+        } catch (e) {
+          objOutput.textContent = '解析失败！无效的JSON字符串';
+        }
+      }
+    }
+
+    // 更新存储列表
+    function updateStorageList() {
+      storageList.innerHTML = '';
+      
+      if (localStorage.length === 0) {
+        const emptyItem = document.createElement('li');
+        emptyItem.textContent = '(空)';
+        storageList.appendChild(emptyItem);
+        return;
+      }
+      
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        
+        const item = document.createElement('li');
+        item.className = 'storage-item';
+        
+        const content = document.createElement('div');
+        content.textContent = `${key}: ${value.length > 50 ? value.substring(0, 50) + '...' : value}`;
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = '删除';
+        deleteBtn.onclick = function() {
+          localStorage.removeItem(key);
+          updateStorageList();
+        };
+        
+        item.appendChild(content);
+        item.appendChild(deleteBtn);
+        storageList.appendChild(item);
+      }
+    }
+
+    // 初始化页面
+    init();
+  </script>
+</body>
+</html> 

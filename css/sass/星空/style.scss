@@ -1,0 +1,66 @@
+@use "sass:math";
+
+.title{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5rem;
+  font-weight: bold;
+  background-image: linear-gradient(to right, #f6d365, #fda085);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+body{
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  overflow: hidden;
+}
+@function star($n){
+  $result: #{math.random(100)}vw #{math.random(100)}vh #fff;
+  @for $i from 1 through $n{
+    $result: #{$result}, #{math.random(100)}vw #{math.random(100)}vh #fff;
+  }
+  @return $result;
+}
+
+$n :5;
+$duration: 400s;
+$count:1000;
+@for $i from 1 through $n{
+  $duration: floor($duration/2);
+  $count: floor($count/2);
+  .layer#{$i}{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: #{$i}px;
+    height: #{$i}px;
+    border-radius: 50%;
+    background-color: transparent;
+    box-shadow: star($count);
+    animation: moveUp $duration linear infinite;
+  }
+  
+  .layer#{$i}::after{
+    content: '';
+    position: inherit;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    box-shadow: inherit;
+    left: 0;
+    top: 100vh;
+  }
+  
+}
+
+
+@keyframes moveUp{
+  to{
+    transform: translateY(-100vh);
+  }
+}

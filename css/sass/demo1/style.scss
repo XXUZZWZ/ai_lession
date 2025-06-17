@@ -1,0 +1,52 @@
+// 变量定义
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$font-stack: Arial, sans-serif;
+$base-padding: 15px;
+
+// 嵌套规则
+body {
+  font-family: $font-stack;
+  color: #333;
+  
+  header {
+    background-color: $primary-color;
+    padding: $base-padding;
+    
+    h1 {
+      color: white;
+      margin: 0;
+    }
+  }
+  
+  .content {
+    padding: $base-padding;
+    
+    p {
+      line-height: 1.6;
+    }
+  }
+}
+
+// 混合器(Mixin)
+@mixin button($bg-color) {
+  background-color: $bg-color;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+// 使用混合器
+.primary-button {
+  @include button($primary-color);
+}
+
+.secondary-button {
+  @include button($secondary-color);
+} 

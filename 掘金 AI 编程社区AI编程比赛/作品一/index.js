@@ -121,14 +121,14 @@ foods.push(...advertisements);
 
 // 美食图片映射 - 为某些食物添加默认图片
 const foodImages = {
-  "中式": "https://img.freepik.com/free-photo/asian-food-with-fried-rice-with-sauce_23-2148236471.jpg",
-  "西式": "https://img.freepik.com/free-photo/top-view-table-full-delicious-food-composition_23-2149141353.jpg",
-  "日式": "https://img.freepik.com/free-photo/fresh-sushi-with-soy-sauce_144627-1869.jpg",
-  "韩式": "https://img.freepik.com/free-photo/bibimbap-korean-mixed-rice-dish-with-vegetable-meat_1150-42993.jpg",
-  "东南亚式": "https://img.freepik.com/free-photo/thai-food-som-tum-papaya-salad_1150-35490.jpg",
-  "中东式": "https://img.freepik.com/free-photo/arab-dish-kabsa-with-meat-vegetables_1150-36973.jpg",
-  "印式": "https://img.freepik.com/free-photo/indian-butter-chicken-black-background_1150-43519.jpg",
-  "虚拟美食": "https://img.freepik.com/free-vector/futuristic-food-floating-glowing-particles_23-2148964935.jpg"
+  "中式": "https://img95.699pic.com/photo/60037/7080.jpg_wh860.jpg",
+  "西式": "https://img95.699pic.com/photo/60018/3438.jpg_wh860.jpg",
+  "日式": "https://ts1.tc.mm.bing.net/th/id/R-C.7bb18f87cf17ae4c733c54d404708219?rik=MoLzmGPngcvTJA&riu=http%3a%2f%2fimg95.699pic.com%2fphoto%2f50019%2f9920.jpg_wh860.jpg&ehk=hbqCAuji3eoz%2bFnKcfvAOk5Etxksatv20K73r2k9s9I%3d&risl=&pid=ImgRaw&r=0",
+  "韩式": "https://img95.699pic.com/photo/50068/9065.jpg_wh860.jpg",
+  "东南亚式": "https://pic.nximg.cn/file/20220309/32449073_094546695102_2.jpg",
+  "中东式": "https://img95.699pic.com/photo/60073/3380.jpg_wh860.jpg",
+  "印式": "https://img95.699pic.com/photo/60070/2247.jpg_wh860.jpg",
+  "虚拟美食": "https://img95.699pic.com/photo/40244/6153.jpg_wh860.jpg"
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return foodImages[food.类型];
     }
     // 最后使用通用默认图片
-    return "https://img.freepik.com/free-photo/delicious-food-black-board_144627-34643.jpg";
+    return "https://img.ixintu.com/download/jpg/201912/b8f9c8c7919af8416637c1efc97cdc27.jpg!con";
   }
 
   // 筛选食物列表

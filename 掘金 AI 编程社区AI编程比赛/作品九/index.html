@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>坦克大战</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div id="startScreen" class="start-screen">
+            <h1>坦克大战</h1>
+            <button id="startButton" class="game-button">开始游戏</button>
+            <div class="game-instructions">
+                <h3>游戏说明</h3>
+                <p>W - 向上移动</p>
+                <p>A - 向左移动</p>
+                <p>S - 向下移动</p>
+                <p>D - 向右移动</p>
+                <p>空格 - 发射子弹</p>
+                <p>P - 暂停游戏</p>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="score">分数: <span id="score">0</span></div>
+            <div class="level">关卡: <span id="level">1</span></div>
+            <div class="lives">生命: <span id="lives">3</span></div>
+        </div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div class="controls-info">
+            <p>控制: W(上) A(左) S(下) D(右) 空格(射击) P(暂停)</p>
+        </div>
+        
+        <div id="gameOver" class="game-over">
+            <h2>游戏结束</h2>
+            <p>最终得分: <span id="finalScore">0</span></p>
+            <button id="restartButton" class="game-button">重新开始</button>
+        </div>
+        
+        <div id="pauseScreen" class="pause-screen">
+            <h2>游戏暂停</h2>
+            <button id="resumeButton" class="game-button">继续游戏</button>
+        </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script src="obstacle.js"></script>
+    <script src="bullet.js"></script>
+    <script src="tank.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 

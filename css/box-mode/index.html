@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>盒模型</title>
+</head>
+<style>
+  /* css reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* 怪异盒模型  width height 盒子宽度包含边框内外边距
+    */
+  }
+
+  .box {
+    background-color: pink;
+    width: 200px;
+    height: 200px;
+    padding: 20px;
+    border: 3px solid #000;
+    margin: 30px;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .container {
+    flex: 1;
+    background-color: yellow;
+  }
+
+  aside {
+    background-color: pink;
+    width: 200px;
+    height: 200px;
+    padding: 20px;
+    border: 3px solid #000;
+    margin: 30px;
+  }
+
+  main {
+    background-color: pink;
+    width: 200px;
+    height: 200px;
+    padding: 20px;
+    border: 3px solid #000;
+    margin: 30px;
+    flex: 1;
+    position: relative;
+  }
+
+  .inner {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    border: 3px solid #000;
+    background-color: pink;
+    border-radius: 50%;
+  }
+
+  .body-flex {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+  }
+</style>
+
+<body>
+  <div class="body-flex">
+    <header style="height: 100px; background-color: skyblue;">
+      <h1>盒模型</h1>
+    </header>
+    <div class="container flex">
+      <aside></aside>
+      <main class="box">
+        <div class="inner">
+          <div style="width: 100px ;height: 100px; background-color: rgba(180, 185, 186, 0.21);;">1+2+3</div>
+        </div>
+        <div style="width: 100px ;height: 100px; background-color: rgba(0, 0, 0, 0.21);;">1+2+3</div>
+        <div style="width: 100px ;height: 100px; background-color: rgba(0, 0, 0, 0.21);;">1+2+3</div>
+
+      </main>
+      <aside></aside>
+    </div>
+    <footer style="height: 100px; background-color: green;">
+      <h3>合模型</h3>
+    </footer>
+  </div>
+</body>
+
+</html>

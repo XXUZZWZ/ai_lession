@@ -1,4 +1,100 @@
-*{
-  margin: 0;
-  padding: 0;
+/* 自定义样式，补充Bootstrap */
+body {
+  background-color: #f5f7fa;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.card-header {
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+}
+
+.card-header.bg-primary {
+  background: linear-gradient(135deg, #4e73df, #224abe) !important;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* 图片预览区域 */
+.img-fluid {
+  transition: transform 0.3s ease;
+}
+
+.img-fluid:hover {
+  transform: scale(1.02);
+}
+
+/* 加载动画 */
+.spinner-border, .spinner-grow {
+  vertical-align: middle;
+}
+
+/* 按钮样式增强 */
+.btn-primary {
+  background: linear-gradient(135deg, #4e73df, #224abe);
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(78, 115, 223, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #224abe, #1a3a98);
+  transform: translateY(-1px);
+  box-shadow: 0 0.3rem 0.5rem rgba(78, 115, 223, 0.4);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 0.125rem 0.25rem rgba(78, 115, 223, 0.4);
+}
+
+/* 内容区域样式 */
+.card-body .text-muted {
+  min-height: 50px;
+}
+
+/* 响应式调整 */
+@media (max-width: 576px) {
+  .card-header h3 {
+    font-size: 1.25rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+/* 结果区域美化 */
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+/* 加载状态动画 */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+.text-muted.fst-italic {
+  animation: pulse 1.5s infinite;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .image-upload-container {
+    padding: 20px;
+  }
 }

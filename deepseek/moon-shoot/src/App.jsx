@@ -26,23 +26,23 @@ function App() {
 
     e.target.nextElementSibling.value = file ? window.URL.createObjectURL(file) : '';
   }
-  const update = async (e)=>{
+  const update = async ()=>{
     if(!imgBase64Data) return;
     const endpoint = 'https://api.moonshot.cn/v1/chat/completions';
     const headers = {
       'Content-Type': 'application/json',
-      // 授权码 Bearer 一般都会带上
-      Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+        // 授权码 Bearer 一般都会带
+      'Authorization': `Bearer ${import.meta.env.VITE_API_KEY}`,
     };
     // 实时反馈
-    setContent('正在.....');
+    setContent('正在生成.....');
     const response = await fetch(
       endpoint,
       {
         method:'POST',
-        headers:headers,
+        headers,
         body:JSON.stringify({
-          model:'moonshoot-v1-8k-vision-preview',
+          model:'moonshot-v1-8k-vision-preview',
           messages:[
             {
               role:'user',
@@ -52,7 +52,8 @@ function App() {
                 image_url:{
                   url:imgBase64Data
                 }
-              },{
+              },
+              {
                 type:'text',
                 text:"请描述图片内容"
               }

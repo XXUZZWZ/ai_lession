@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    var name = "The Window"
+    let b = 2;
+    var object = {
+      name: "My Object",
+      getnameFunc: function () {
+        var that = this;
+        return function () {
+          return that.name;
+        }
+        // 调用的时候决定
+      }
+    }
+    console.log(object.getnameFunc())
+    console.log(object.getnameFunc()())
+    //var f1 = object.getnameFunc;
+    // console.log(f1())
+  </script>
+</body>
+
+</html>

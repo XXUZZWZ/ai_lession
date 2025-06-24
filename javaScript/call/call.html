@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    
+    // console.log(Function.prototype,Function.__proto__);
+    // console.log(Function);
+    // ...args reset 运算符
+    Function.prototype.myCall = function(context,...args){
+      console.log("this mycall");
+      if(context === null || context === undefined){
+        context = window;
+      }
+      console.log(this);
+      if(typeof this !== "function"){
+        throw new Error("this is not a function");
+      }
+      // 函数要运行
+      const fnkey = Symbol("fn");
+      // this 是 context 上面的方法的时候，this 一定指向 context 
+      // 这样就不会覆盖context上的属性
+      context[fnkey] = this;
+      console.log(context);
+      // 搜集参数
+      console.log(args)
+      // js动态性
+      const result = context[fnkey](...args);
+      // context 被污染了，要删除这个属性
+      delete context[fnkey];
+      return result;
+    }
+    var obj = {
+      name:'lj',
+      fn:function(){
+        console.log(this.name);
+      }
+    }
+    function gretting (){
+      console.log(this.name);
+      return [...arguments]
+    }
+    // es6 新数据类型 ，绝对唯一
+   // const fnKey = Symbol("fn");
+
+    // const obj = {name:"lj"};
+    // obj.myCall = Function.prototype.myCall;
+    // obj.myCall({name:"fsafsf"});
+   res = gretting.myCall(obj,1,2,3);
+   console.log(res);
+  </script>
+</body>
+</html>

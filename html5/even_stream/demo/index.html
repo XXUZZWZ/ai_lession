@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Chatbot - 智能对话平台</title>
+  <style>
+    /* 新增对话框样式 */
+    .chat-dialog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+
+    .chat-dialog.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .dialog-content {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      box-shadow: var(--card-shadow);
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: var(--primary-color);
+    }
+
+    .message-container {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #f9f9f9;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .input-group input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .input-group button {
+      padding: 0.75rem 1.2rem;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .input-group button:hover {
+      background: #357ABD;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="message"></div>
+  <div class="container">
+    <!-- 原有内容保持不变 -->
+    <!-- ... existing code ... -->
+    <button class="cta-button" id="chatBtn">立即开始对话</button>
+    <!-- 新增对话框结构 -->
+    <div class="chat-dialog" id="chatDialog">
+      <div class="dialog-content">
+        <span class="close-btn" id="closeBtn">&times;</span>
+        <h2>对话窗口</h2>
+        <div class="message-container" id="messageContainer">
+          <p>您好！我是LLM Chatbot，有什么可以帮您的吗？</p>
+        </div>
+        <form class="input-group" id="chatForm">
+          <input type="text" id="userInput" placeholder="输入您的问题..." required>
+          <button type="submit">发送</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 LLM Chatbot 保留所有权利
+  </footer>
+
+  <script>
+    // 发送请求 
+    // html 5 sse 
+    // 给它一个支持SSE的地址
+    // SSE Server Events 服务器推送事件 
+    // 事件流 事件
+    const source = new EventSource('/sse');
+    source.onmessage = function (event) {
+      console.log(event.data);
+      message.innerHTML += event.data + '<br>';
+    };
+
+
+    // 对话框交互逻辑
+    const chatBtn = document.getElementById('chatBtn');
+    const chatDialog = document.getElementById('chatDialog');
+    const closeBtn = document.getElementById('closeBtn');
+    const chatForm = document.getElementById('chatForm');
+    const userInput = document.getElementById('userInput');
+    const messageContainer = document.getElementById('messageContainer');
+
+    // 打开对话框
+    chatBtn.addEventListener('click', () => {
+      chatDialog.classList.add('active');
+      userInput.focus();
+    });
+
+    // 关闭对话框
+    closeBtn.addEventListener('click', () => {
+      chatDialog.classList.remove('active');
+    });
+
+    // 提交消息
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const userMessage = userInput.value.trim();
+      if (userMessage) {
+        // 添加用户消息
+        const userDiv = document.createElement('div');
+        userDiv.style.textAlign = 'right';
+        userDiv.innerHTML = `<p><strong>您:</strong> ${userMessage}</p>`;
+        messageContainer.appendChild(userDiv);
+
+        // 模拟AI回复
+        setTimeout(() => {
+          const aiDiv = document.createElement('div');
+          aiDiv.style.textAlign = 'left';
+
+          aiDiv.innerHTML = `<p><strong>Chatbot:</strong> 这是一个示例回复。</p>`;
+          messageContainer.appendChild(aiDiv);
+          messageContainer.scrollTop = messageContainer.scrollHeight;
+        }, 500);
+        const source = new EventSource('/sse');
+        source.onmessage = function (event) {
+          const aiDiv = document.createElement('div');
+          aiDiv.style.textAlign = 'left';
+
+          aiDiv.innerHTML = `<p><strong>Chatbot:</strong> ${event.data}。</p>`;
+          messageContainer.appendChild(aiDiv);
+          messageContainer.scrollTop = messageContainer.scrollHeight;
+        };
+
+        // 清空输入框并滚动到底部
+        userInput.value = '';
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      }
+    });
+  </script>
+</body>
+
+</html>

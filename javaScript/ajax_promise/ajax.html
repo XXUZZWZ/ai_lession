@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajax</title>
+</head>
+
+<body>
+  <ul id="repos">
+
+  </ul>
+  <script type="module">
+    // https://api.github.com/users/XXUZZWZ/repos
+    // 前后端分离 js主动的请求接口(异步任务) ，拿到数据
+    // xhr 对象？
+    const xhr = new XMLHttpRequest();// 实例化一个xhr 对象
+    console.log(xhr);
+    console.log(xhr.readyState);
+    // http 请求 GET 明文 POST 密文
+    // xhr.open(method,url) 打开一个数据通道
+    // 底层 好理解  浏览器打开一个请求数据通道 
+    xhr.open('GET', 'https://api.github.com/users/XXUZZWZ/repos')
+    console.log(xhr.readyState);
+    xhr.send();// 发生请求
+    // es6 之前的对象 连promise 对象 都没有 
+    // 事件监听 回调函数 
+    xhr.onreadystatechange = function () {
+      console.log(xhr.readyState);
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // 拿到数据
+        // 如果 readyState === 4 且 status === 200 就得到了数据
+        // 早期是XML html 是一种 XML 文档 <song><author>林俊杰</author><title>江南</title></song>
+        // 现代用 JSON {"author":"林俊杰","title":"江南"}
+        console.log(xhr.responseText);
+
+        const data = JSON.parse(xhr.responseText);
+
+        console.log(data);
+        document.getElementById('repos').innerHTML =
+          data.map(reop => `
+        <li>
+          <a href="${reop.html_url}">${reop.name}</a>
+        </li>
+        `)
+            .join('');
+      }
+    }
+    // 共同点 http xhr 对象
+    // 区别 url 参数
+    /**
+     * params: url
+     * return: promise
+    */
+    const getJSON = async (url) => {
+
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.send();
+        xhr.onreadystatechange = function () {
+          if (xhr.status === 200 && xhr.readyState === 4) {
+            resolve(JSON.parse(xhr.responseText));
+          }
+        }
+
+      })
+    }
+    (async () => {
+      data = await getJSON('https://api.github.com/users/XXUZZWZ/repos');
+      console.log(data);
+      document.getElementById('repos').innerHTML = data.map(repo => {
+        return `
+          <li>
+            <a href="${repo.html_url}">${repo.name}</a>
+          </li>
+          `
+      })
+    })()
+
+
+
+  </script>
+</body>
+
+</html>

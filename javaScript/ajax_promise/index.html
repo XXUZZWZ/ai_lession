@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS 请求</title>
+</head>
+
+<body>
+  <script>
+    // 阻塞 
+    //  api 地址 ： https://api.github.com/users/XXUZZWZ
+    // JSON 数据返回 有后端服务器返回
+    //  返回资源
+    // 前端可以自己做主
+    // 通过fetch 主动拉取资源
+    // web 2.0 的动态页面 
+    // DOMContentLoaded 事件比 load 事件先执行
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log(document.getElementById('repos'));
+    })
+  </script>
+  <ul id="repos">
+
+  </ul>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // es6 写法
+      // console.log(document.getElementById('repos'));
+      // fetch('https://api.github.com/users/XXUZZWZ/repos')
+      //   .then(res => res.json())
+      //   .then(data => {
+      //     document.getElementById('repos').innerHTML = data.map(repo => {
+      //       return
+      //       `
+      //       <li>
+      //         <a href="${repo.html_url}">${repo.name}</a>
+      //       </li>
+      //       `
+      //     }).join('')
+      //   })
+      // es8 写法
+      // new Promise(); 可以new 一个对象 这里的fetch()是一个promise对象
+      // fetch 本质是返回 promise 实例
+      // pending 状态 
+      // resolve() fullfilled 完成了
+      // reject() rejected 拒绝失败了
+      console.log(fetch('https://api.github.com/users/XXUZZWZ/repos'))
+      const data = await fetch('https://api.github.com/users/XXUZZWZ/repos');
+      // await 后是一个  promise 实例对象 
+      const repos = await data.json();
+      console.log(repos);
+      document.getElementById('repos').innerHTML = repos.map(repo => {
+        return `
+          <li>
+            <a href="${repo.html_url}">${repo.name}</a>
+          </li>
+        `
+      }).join('')
+    })
+
+
+
+  </script>
+</body>
+
+
+</html>

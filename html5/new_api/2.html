@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #dropZone {
+      width: 300px;
+      height: 300px;
+      border: 2px dashed #666;
+      text-align: center;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      max-height: 100%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 文件拖放区域 -->
+  <div id="dropZone">
+    将文件拖放到这里
+    <div id="previewContainer"></div>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const previewContainer = document.getElementById('previewContainer');
+
+    // 拖拽经过时样式
+    dropZone.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      this.style.borderColor = '#007bff';
+      this.style.backgroundColor = '#f0f8ff';
+    });
+
+    // 拖拽离开时恢复样式
+    dropZone.addEventListener('dragleave', function (e) {
+      e.preventDefault();
+      this.style.borderColor = '#ccc';
+      this.style.backgroundColor = 'transparent';
+    });
+
+    // 文件拖放处理
+    dropZone.addEventListener('drop', function (e) {
+      e.preventDefault();
+      this.style.borderColor = '#ccc';
+      this.style.backgroundColor = 'transparent';
+
+      // 获取拖放的文件列表
+      const files = e.dataTransfer.files;
+
+      if (files.length > 0) {
+        // 处理每个文件
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+
+          // 文件类型过滤（可选）
+          if (!file.type.startsWith('image/')) {
+            alert(`文件 ${file.name} 不是图片类型`);
+            continue;
+          }
+
+          // 创建文件读取对象
+          const reader = new FileReader();
+
+          // 读取完成后的回调
+          reader.onload = function (e) {
+            // 创建预览图片元素
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'preview-image';
+            previewContainer.innerHTML = ''; // 清除之前的预览
+            previewContainer.appendChild(img);
+
+            // 可选：显示文件信息
+            const info = document.createElement('div');
+            info.textContent = `文件名: ${file.name}, 大小: ${(file.size / 1024).toFixed(2)} KB`;
+            previewContainer.appendChild(info);
+          };
+
+          // 读取文件内容
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

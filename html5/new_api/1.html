@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- 在您的HTML文件中添加可拖动元素 -->
+  <img id="dragImage" src="example.jpg" draggable="true" style="width:100px;height:100px;" />
+
+  <!-- 添加放置目标区域 -->
+  <div id="dropZone" style="width:300px;height:300px;border:1px solid #ccc;">
+    将图片拖放到这里
+  </div>
+
+  <!-- <script>
+    // 拖动开始事件
+    document.getElementById('dragImage').addEventListener('dragstart', function (e) {
+      e.dataTransfer.setData('text/plain', e.target.id); // 存储被拖动元素的ID
+    });
+
+    // 拖动经过目标区域时
+    document.getElementById('dropZone').addEventListener('dragover', function (e) {
+      e.preventDefault(); // 必须阻止默认行为才能触发drop事件
+    });
+
+    // 拖放事件
+    document.getElementById('dropZone').addEventListener('drop', function (e) {
+      e.preventDefault();
+      const data = e.dataTransfer.getData('text/plain');
+      const draggedElement = document.getElementById(data);
+      e.target.appendChild(draggedElement); // 将元素移动到目标区域
+    });
+  </script> -->
+</body>
+
+</html>

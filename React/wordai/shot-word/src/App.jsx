@@ -1,5 +1,5 @@
 import './App.css'
-import PictureCard from './assets/components/PictureCard/index.jsx'
+import PictureCard from './components/PictureCard/index.jsx'
 function App() {
   
 

@@ -44,6 +44,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const WebSocket = require("ws");
 const server = http.createServer((req, res) => {
   if (req.method === "GET" && (req.url === "/" || req.url == "/index.html")) {
     fs.readFile(
@@ -84,7 +85,118 @@ const server = http.createServer((req, res) => {
       res.end(content);
     });
   }
+  if (req.method === "POST" && req.url === "/login") {
+    // 用户名和密码的校验
+    res.writeHead(200, {
+      // 服务器端查询
+      "set-cookie": "username=admin", // 设置cookie
+      "Content-Type": "application/json",
+    });
+    res.end(
+      JSON.stringify({
+        code: 200,
+        message: "登录成功",
+      })
+    );
+  }
+  if (req.method === "GET" && req.url === "/check-login") {
+    console.log(req.headers.cookie); // 获取cookie
+    if (req.headers.cookie) {
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+      });
+      res.end(
+        JSON.stringify({
+          loggedIn: true,
+          username: "admin",
+        })
+      );
+    } else {
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+      });
+      res.end(
+        JSON.stringify({
+          loggedIn: false,
+        })
+      );
+    }
+  }
+  if (req.method === "GET" && req.url === "/logout") {
+    res.writeHead(200, {
+      "set-cookie": "username=; Max-Age=0", // 清除cookie
+      "Content-Type": "application/json",
+    });
+    res.end(
+      JSON.stringify({
+        code: 200,
+        message: "登出成功",
+      })
+    );
+  }
 });
+
+// server.listen(1235, () => {
+//   console.log("Server is running at http://localhost:1235/");
+// });
+
+// const wss = new WebSocket.Server({ server }); // 将 WebSocket 绑定到 HTTP 服务器上
+// const clients = new Set(); // 保存所有连接的客户端
+
+// wss.on("connection", (ws) => {
+//   console.log("WebSocket client connected");
+//   clients.add(ws);
+
+//   ws.on("close", () => {
+//     console.log("WebSocket client disconnected");
+//     clients.delete(ws);
+//   });
+// });
+
+// // 修改登录接口，添加 WebSocket 消息推送
+// if (req.method === "POST" && req.url === "/login") {
+//   res.writeHead(200, {
+//     "set-cookie": "username=admin",
+//     "Content-Type": "application/json",
+//   });
+
+//   const response = JSON.stringify({
+//     code: 200,
+//     message: "登录成功",
+//   });
+
+//   res.end(response);
+
+//   // 通知所有连接的 WebSocket 客户端
+//   clients.forEach((client) => {
+//     if (client.readyState === WebSocket.OPEN) {
+//       client.send(JSON.stringify({ type: "login" }));
+//     }
+//   });
+// }
+
+// // 修改登出接口，添加 WebSocket 消息推送
+// if (req.method === "GET" && req.url === "/logout") {
+//   res.writeHead(200, {
+//     "set-cookie": "username=; Max-Age=0",
+//     "Content-Type": "application/json",
+//   });
+
+//   const response = JSON.stringify({
+//     code: 200,
+//     message: "登出成功",
+//   });
+
+//   res.end(response);
+
+//   // 通知所有连接的 WebSocket 客户端
+//   clients.forEach((client) => {
+//     if (client.readyState === WebSocket.OPEN) {
+//       client.send(JSON.stringify({ type: "logout" }));
+//     }
+//   });
+// }
+
 server.listen(1235, () => {
   console.log("Server is running at http://localhost:1235/");
 });

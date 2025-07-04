@@ -2,9 +2,9 @@ import React,{useState} from 'react';
 import './style.css';
 
 const PictureCard = (props) => {
-  console.log(props," ///props");
+  //console.log(props," ///props");
   const {uploadImage,word} = props;
-  console.log(uploadImage," ///uploadImage");
+  //console.log(uploadImage," ///uploadImage");
   const [imgPreview, setImgPreview] = useState('https://res.bearbobo.com/resource/upload/W44yyxvl/upload-ih56twxirei.png');
 
   const updateImageData = (e) => {

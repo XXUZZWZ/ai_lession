@@ -80,14 +80,14 @@ function App() {
                 {
                   explainations.map((item, index) => (
                     <div key={index} className='explaination'>
-                      {item}
+                     <p> {item}</p>
                     </div>
                    ))
                 }
                 {
                   expReply.map((item, index) => (
                     <div key={index} className='explanation-reply'>
-                      {item}
+                    <p>  {item}</p>
                     </div>
                   ))
                 }
